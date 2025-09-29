@@ -2,7 +2,7 @@
 
 {% set selected = [] %}
 
-{% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
+{% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type, field.related_entity_query) %}
   {% for selected_id in selected_ids %}
     {% if entity['id'] == selected_id %}
       {% do selected.append((entity.get('name'), entity.get('title') or entity.get('name'))) %}

@@ -20,24 +20,37 @@ def get_helpers():
 
 
 def relationship_get_entity_list(
-    entity: str, entity_type: str, include_private: bool = True
+    entity: str,
+    entity_type: str,
+    entity_query: dict[str, Any] | None = None,
+    include_private: bool = True,
 ) -> list[dict[str, str]]:
     """Return ids list of specified entity (entity, entity_type)."""
 
     if entity == "package":
-        entity_list = tk.get_action("package_search")(
-            {},
-            {
+        params = (
+            entity_query
+            if entity_query
+            else {
                 "fq": f"type:{entity_type}",
                 "rows": 1000,
                 "include_private": include_private,
-            },
+            }
+        )
+        entity_list = tk.get_action("package_search")(
+            {},
+            params,
         )
         entity_list = entity_list["results"]
     else:
+        params = (
+            entity_query
+            if entity_query
+            else {"entity": entity, "entity_type": entity_type}
+        )
         entity_list = tk.get_action("relationship_get_entity_list")(
             {},
-            {"entity": entity, "entity_type": entity_type},
+            params,
         )
         entity_list = [
             {"id": id, "name": name, "title": title} for id, name, title in entity_list
@@ -124,6 +137,7 @@ def relationship_get_choices_for_related_entity_field(
     entities = relationship_get_entity_list(
         field["related_entity"],
         field["related_entity_type"],
+        field.get("related_entity_query"),
     )
 
     choices: list[tuple[str, str | None]] = []
@@ -148,7 +162,8 @@ def relationship_get_choices_for_related_entity_field(
 
         choices.append((entity["id"], entity.get("title") or entity.get("name")))
 
-    choices.sort(key=lambda x: x[1])  # pyright: ignore[reportArgumentType, reportCallIssue]
+    # pyright: ignore[reportArgumentType, reportCallIssue]
+    choices.sort(key=lambda x: x[1])
     return choices
 
 

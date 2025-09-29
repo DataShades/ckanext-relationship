@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
-from typing_extensions import override
 from datetime import datetime
+from typing import Any
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped
+from typing_extensions import override
 
 from ckan import logic, model
 from ckan.model.types import make_uuid
