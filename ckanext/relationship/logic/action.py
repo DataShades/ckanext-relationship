@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import sqlalchemy as sa
 from flask import jsonify
 from flask.wrappers import Response
-import sqlalchemy as sa
 
 import ckan.plugins.toolkit as tk
 from ckan import authz, logic

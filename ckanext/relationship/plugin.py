@@ -12,7 +12,7 @@ from ckan.types import Context
 
 import ckanext.scheming.helpers as sch
 
-from ckanext.relationship import helpers, utils, views
+from ckanext.relationship import config, helpers, utils, views
 from ckanext.relationship.logic import action, auth, validators
 
 
@@ -80,8 +80,8 @@ class RelationshipPlugin(p.SingletonPlugin):
             )
 
             with contextlib.suppress(NotFound):
-                rebuild(object_id)
-        rebuild(subject_id)
+                _rebuild_package_index(object_id)
+        _rebuild_package_index(subject_id)
 
     def before_dataset_index(self, pkg_dict: dict[str, Any]):
         pkg_id = pkg_dict["id"]
@@ -166,6 +166,13 @@ def _update_relations(context: Context, pkg_dict: dict[str, Any]):
             )
 
         with contextlib.suppress(NotFound):
-            rebuild(object_id)
-    rebuild(subject_id)
+            _rebuild_package_index(object_id)
+    _rebuild_package_index(subject_id)
     return pkg_dict
+
+
+def _rebuild_package_index(package_id: str) -> None:
+    if config.async_package_index_rebuild():
+        tk.enqueue_job(rebuild, [package_id], queue=config.redis_queue_name())
+    else:
+        rebuild(package_id)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, cast
+
 import ckan.plugins.toolkit as tk
 from ckan.logic import NotFound
 

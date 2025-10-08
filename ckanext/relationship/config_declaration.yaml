@@ -12,3 +12,18 @@ groups:
           hidden from the package show for both the search page and the package read
           page. To include relationships in the package_show action, you must add the
           flag with_relationships=True to the data_dict.
+
+      - key: ckanext.relationship.async_package_index_rebuild
+        type: bool
+        default: false
+        description: |
+            If true, when a relationship is created, updated or deleted, the related
+            packages will be re-indexed in the background using a task queue. This can
+            help improve solve timeouts and performance issues on sites with a large
+            number of relationships. If false, the related packages will be re-indexed
+            immediately.
+
+      - key: ckanext.relationship.redis_queue_name
+        default: "default"
+        description: |
+            The name of the Redis queue to use for background tasks.
