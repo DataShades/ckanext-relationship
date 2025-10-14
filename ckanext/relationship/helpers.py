@@ -5,7 +5,8 @@ from typing import Any
 
 import ckan.plugins.toolkit as tk
 from ckan import authz
-from ckan.lib.search.query import solr_literal
+
+from ckanext.relationship import utils
 
 
 def get_helpers():
@@ -104,7 +105,7 @@ def relationship_get_selected_json(selected_ids: list[str] | None = None) -> str
     search = tk.get_action("package_search")
     rows = 100
     start = 0
-    fq = "id:({})".format(" OR ".join(map(solr_literal, selected_ids)))
+    fq = utils.build_fq_for_object_ids(selected_ids)
     while True:
         result = search(
             {},
@@ -114,6 +115,7 @@ def relationship_get_selected_json(selected_ids: list[str] | None = None) -> str
                 "rows": rows,
                 "start": start,
                 "fl": "id,name,title",
+                "sort": "title_string asc, name asc, id asc",
             },
         )
         selected_pkgs.extend(

@@ -1,0 +1,30 @@
+{#
+  related_packages_list.html
+  Purpose: Standalone shell that renders the target <ul> and spinner,
+           then kicks off the first HTMX request.
+
+  Required vars:
+    - pkg_id: str
+    - object_type: str
+    - relation_type: str
+
+  Optional vars:
+    - page_size: int = 20       # initial batch size
+    - trigger: str = "load"     # e.g. "load" or "revealed once"
+#}
+
+
+{% set ns = pkg_id ~ '-' ~ object_type ~ '-' ~ relation_type %}
+
+<ul id="rel-list-{{ ns }}"
+    class="dataset-list list-unstyled"
+    hx-get="{{ h.url_for('relationships.related_batch') }}?pkg_id={{ pkg_id }}&object_type={{ object_type }}&relation_type={{ relation_type }}&start=0&size={{ page_size|default(20) }}"
+    hx-trigger="load"
+    hx-swap="innerHTML"
+    hx-target="this"
+    hx-indicator="#spinner-{{ ns }}">
+</ul>
+
+<div id="spinner-{{ ns }}" class="htmx-indicator">
+    {% snippet 'snippets/relationship_spinner.html' %}
+</div>

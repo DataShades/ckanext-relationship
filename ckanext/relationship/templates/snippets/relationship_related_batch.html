@@ -1,0 +1,42 @@
+{#
+  related_packages_batch.html
+  Purpose: HTMX response that appends <li> items into an existing
+           <ul class="dataset-list"> and replaces the sentinel <li>
+           to enable infinite scrolling.
+
+  Required vars:
+    - packages: list[dict]      # CKAN package dicts to render
+    - has_more: bool            # more pages available?
+    - next_start: int           # next offset
+    - page_size: int            # rows per page
+    - pkg_id: str               # subject package id (for DOM ids)
+    - object_type: str          # relation object type (for DOM ids)
+    - relation_type: str        # relation type (for DOM ids)
+
+  Optional vars (passed to package_item.html if present):
+    - item_class: str
+    - hide_resources: bool
+    - banner, truncate, truncate_title, search_page: any
+#}
+
+
+{% set ns = pkg_id ~ '-' ~ object_type ~ '-' ~ relation_type %}
+{% set spinner_id = 'spinner-' ~ ns %}
+{% set sentinel_id = 'rel-sentinel-' ~ ns %}
+
+{% if packages and packages|length %}
+    {% for package in packages %}
+        {% snippet 'snippets/package_item.html', package=package %}
+    {% endfor %}
+{% endif %}
+
+{% if has_more %}
+    <li id="{{ sentinel_id }}"
+        style="height:1px; width:100%;"
+        hx-get="{{ h.url_for('relationships.related_batch') }}?pkg_id={{ pkg_id }}&object_type={{ object_type }}&relation_type={{ relation_type }}&start={{ next_start }}&size={{ page_size }}"
+        hx-trigger="revealed"
+        hx-target="this"
+        hx-swap="outerHTML"
+        hx-indicator="#{{ spinner_id }}">
+    </li>
+{% endif %}

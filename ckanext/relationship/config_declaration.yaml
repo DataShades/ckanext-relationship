@@ -1,6 +1,6 @@
 version: 1
 groups:
-  - annotation: ckanext-mbie-erms-shared
+  - annotation: ckanext-relationship
     options:
       - key: ckanext.relationship.views_without_relationships_in_package_show
         type: list
