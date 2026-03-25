@@ -228,9 +228,13 @@ def relationship_autocomplete(context: Context, data_dict: dict[str, Any]) -> Re
             if tk.h.check_access("package_update", {"id": pkg["id"]})
         ]
 
+    helper_name = (
+        data_dict.get("format_autocomplete_helper")
+        or "relationship_format_autocomplete"
+    )
     format_autocomplete_helper: Any = getattr(
         tk.h,
-        data_dict.get("format_autocomplete_helper", "relationship_format_autocomplete"),
+        helper_name,
         tk.h.relationship_format_autocomplete,
     )
 

@@ -3,14 +3,9 @@ import json
 import pytest
 
 from ckan.lib.helpers import url_for
-from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
-
-@pytest.fixture
-def sysadmin_headers():
-    user = factories.SysadminWithToken()
-    return {"Authorization": user["token"]}
+import ckan.tests.factories as factories
 
 
 @pytest.mark.ckan_config(

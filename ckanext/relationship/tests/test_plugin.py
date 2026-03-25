@@ -1,52 +1,45 @@
-"""Tests for plugin.py.
+import pytest
 
-Tests are written using the pytest library (https://docs.pytest.org), and you
-should read the testing guidelines in the CKAN docs:
-https://docs.ckan.org/en/2.9/contributing/testing.html
-
-To write tests for your extension you should install the pytest-ckan package:
-
-    pip install pytest-ckan
-
-This will allow you to use CKAN specific fixtures on your tests.
-
-For instance, if your test involves database access you can use `clean_db` to
-reset the database:
-
-    import pytest
-
-    from ckan.tests import factories
-
-    @pytest.mark.usefixtures("clean_db")
-    def test_some_action():
-
-        dataset = factories.Dataset()
-
-        # ...
-
-For functional tests that involve requests to the application, you can use the
-`app` fixture:
-
-    from ckan.plugins import toolkit
-
-    def test_some_endpoint(app):
-
-        url = toolkit.url_for('myblueprint.some_endpoint')
-
-        response = app.get(url)
-
-        assert response.status_code == 200
+import ckan.plugins as p
+from ckan.tests import factories
+from ckan.tests.helpers import call_action
 
 
-To temporary patch the CKAN configuration for the duration of a test you can use:
+@pytest.mark.ckan_config("ckan.plugins", "relationship")
+@pytest.mark.usefixtures("with_plugins")
+def test_plugin_registers_actions_helpers_and_validators():
+    plugin = p.get_plugin("relationship")
 
-    import pytest
+    assert plugin is not None
+    assert p.plugin_loaded("relationship")
+    assert "relationship_relation_create" in plugin.get_actions()
+    assert "relationship_relation_delete" in plugin.get_actions()
+    assert "relationship_get_entity_list" in plugin.get_actions()
+    assert "relationship_get_entity_list" in plugin.get_helpers()
+    assert "relationship_related_entity" in plugin.get_validators()
 
-    @pytest.mark.ckan_config("ckanext.myext.some_key", "some_value")
-    def test_some_action():
-        pass
-"""
 
+@pytest.mark.usefixtures("clean_db")
+def test_before_dataset_index_moves_relationship_ids_to_vocab_field():
+    subject = factories.Dataset(type="package-with-relationship")
+    related = factories.Dataset(type="package-with-relationship")
 
-def test_plugin():
-    pass
+    call_action(
+        "relationship_relation_create",
+        {"ignore_auth": True},
+        subject_id=subject["id"],
+        object_id=related["id"],
+        relation_type="related_to",
+    )
+
+    plugin = p.get_plugin("relationship")
+    indexed = plugin.before_dataset_index(
+        {
+            "id": subject["id"],
+            "type": "package-with-relationship",
+            "related_packages": ["stale-value"],
+        }
+    )
+
+    assert indexed["vocab_related_packages"] == [related["id"]]
+    assert "related_packages" not in indexed
