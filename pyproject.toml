@@ -29,6 +29,7 @@ Homepage = "https://github.com/DataShades/ckanext-relationship"
 
 [project.optional-dependencies]
 dashboard = ["ckanext-tables>=1.8.0,<2.0.0"]
+docs = ["mkdocs", "mkdocs-material"]
 
 [project.entry-points."ckan.plugins"]
 relationship = "ckanext.relationship.plugin:RelationshipPlugin"

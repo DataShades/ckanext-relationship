@@ -19,8 +19,6 @@ dataset_fields:
     preset: related_entity
     label: Related Packages
     validators: relationship_related_entity
-    current_entity: package
-    current_entity_type: package-with-relationship
     related_entity: package
     related_entity_type: package-with-relationship
     relation_type: related_to
