@@ -36,14 +36,19 @@ class TestRelationshipViews:
             {"name": related["id"], "title": "Related Project"}
         ]
 
-    def test_autocomplete_check_sysadmin_controls_owned_only(self, app, sysadmin, sysadmin_headers):
+    def test_autocomplete_check_sysadmin_controls_owned_only(
+        self,
+        app,
+        sysadmin,
+        sysadmin_headers,
+    ):
         current = factories.Dataset(
-            user=sysadmin["name"],
+            user=sysadmin,
             type="package-with-relationship",
             title="Current Project",
         )
         owned = factories.Dataset(
-            user=sysadmin["name"],
+            user=sysadmin,
             type="package-with-relationship",
             title="Owned Project",
         )
