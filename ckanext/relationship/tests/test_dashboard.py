@@ -23,9 +23,16 @@ class TestRelationshipDashboard:
         url = url_for("relationship_dashboard.dashboard")
 
         app.get(url, status=403)
-        response = app.get(url, headers=sysadmin_headers, status=200)
+        response = app.get(
+            url,
+            headers={
+                **sysadmin_headers,
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            status=200,
+        )
 
-        assert "Relationships dashboard" in response
+        assert '"data"' in response
 
     def test_dashboard_button_visible_for_sysadmin(self, app, sysadmin_headers):
         response = app.get("/", headers=sysadmin_headers, status=200)
