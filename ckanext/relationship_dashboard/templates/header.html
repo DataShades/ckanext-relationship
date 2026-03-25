@@ -1,0 +1,14 @@
+{% ckan_extends %}
+
+{% block header_account_logged %}
+    {% if g.userobj and g.userobj.sysadmin %}
+        <li>
+            <a href="{{ h.url_for('relationship_dashboard.dashboard') }}" title="{{ _('Relationships dashboard') }}">
+                <i class="fa fa-link" aria-hidden="true"></i>
+                <span class="sr-only">{{ _("Relationships dashboard") }}</span>
+            </a>
+        </li>
+    {% endif %}
+
+    {{ super() }}
+{% endblock %}

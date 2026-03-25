@@ -35,6 +35,34 @@ Multiple - toggle the ability to add multiple related entities.
 Updatable_only - toggle the ability to add only entities that can be updated by the
 current user.
 
+## Dashboard
+
+The extension also includes an optional admin dashboard implemented with
+`ckanext-tables`.
+
+If you install from PyPI, install the dashboard extra as well:
+
+```sh
+pip install "ckanext-relationship[dashboard]"
+```
+
+To enable it, add `tables relationship_dashboard` to the `ckan.plugins`
+setting together with the base `relationship` plugin:
+
+```ini
+ckan.plugins = relationship tables relationship_dashboard
+```
+
+After that, a sysadmin-only button appears in the header and opens the dashboard at
+`/ckan-admin/relationships/dashboard`.
+
+The dashboard:
+
+* shows one logical relationship per row instead of displaying both stored reverse records
+* links subject and object entities directly to their CKAN pages
+* supports filtering, sorting, export, and bulk deletion
+* shows `extras` payload in a modal-friendly format
+
 ## Requirements
 
 **TODO:** For example, you might want to mention here which versions of CKAN this
@@ -44,10 +72,11 @@ If your extension works across different versions you can add the following tabl
 
 Compatibility with core CKAN versions:
 
-| CKAN version    | Compatible? |
-|-----------------|-------------|
-| 2.9             | yes         |
-| 2.10            | yes         |
+| CKAN version | Compatible? |
+|--------------|-------------|
+| 2.9          | yes         |
+| 2.10         | yes         |
+| 2.11         | yes         |
 
 Suggested values:
 
@@ -79,6 +108,8 @@ To install ckanext-relationship:
 3. Add `relationship` to the `ckan.plugins` setting in your CKAN
    config file (by default the config file is located at
    `/etc/ckan/default/ckan.ini`).
+
+   If you want to enable the admin dashboard, also add `tables relationship_dashboard`.
 
 4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
 
