@@ -490,6 +490,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#relationship_has_relationspkg_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_has_relations(pkg_type)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship_get_relation_typespkg_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_get_relation_types(pkg_type)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship_show_graph_on_read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_show_graph_on_read()
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -596,6 +629,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#graph-snippet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph snippet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#when-to-use-which-rendering-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -640,6 +684,33 @@
     
   
     Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph
   
 
     
@@ -772,6 +843,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#relationship_has_relationspkg_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_has_relations(pkg_type)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship_get_relation_typespkg_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_get_relation_types(pkg_type)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship_show_graph_on_read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_show_graph_on_read()
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -878,6 +982,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#graph-snippet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph snippet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#when-to-use-which-rendering-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -941,6 +1056,16 @@ logic as the default field.</p>
 <p>Formats autocomplete results into CKAN’s expected completion JSON shape.</p>
 <p>You can replace it by passing another helper name with
 <code>format_autocomplete_helper</code>.</p>
+<p>The following graph helpers are registered only when the optional
+<code>relationship_graph</code> plugin is enabled.</p>
+<h3 id="relationship_has_relationspkg_type"><code>relationship_has_relations(pkg_type)</code></h3>
+<p>Returns <code>True</code> when the given dataset type has relationship-backed scheming
+fields.</p>
+<h3 id="relationship_get_relation_typespkg_type"><code>relationship_get_relation_types(pkg_type)</code></h3>
+<p>Returns the distinct relationship types configured for the given dataset type.</p>
+<h3 id="relationship_show_graph_on_read"><code>relationship_show_graph_on_read()</code></h3>
+<p>Returns whether the graph section should be added automatically to dataset read
+pages.</p>
 <h2 id="scheming-snippets">Scheming snippets</h2>
 <h3 id="schemingform_snippetsrelated_entityhtml"><code>scheming/form_snippets/related_entity.html</code></h3>
 <p>Default select-based widget for the <code>related_entity</code> preset.</p>
@@ -978,6 +1103,10 @@ lists.</p>
 <p>This is the follow-up snippet used by <code>/relationship/section</code>.</p>
 <h3 id="snippetsrelationship_spinnerhtml"><code>snippets/relationship_spinner.html</code></h3>
 <p>Simple loading indicator used by the package list snippets.</p>
+<h2 id="graph-snippet">Graph snippet</h2>
+<p>The reusable graph snippet is <code>relationship_graph/snippets/graph.html</code>.</p>
+<p>For full usage, controls, rendering behavior, and screenshots, see
+<a href="../graph/">Graph</a>.</p>
 <h2 id="when-to-use-which-rendering-approach">When to use which rendering approach</h2>
 <table>
 <thead>
@@ -1009,6 +1138,8 @@ lists.</p>
 <ul>
 <li>The autocomplete helpers and endpoint are package-only.</li>
 <li>The HTMX route and batch snippets are package-only.</li>
+<li>The graph snippet, graph helpers, and <code>/api/2/util/relationships/graph</code>
+  route require the optional <code>relationship_graph</code> plugin.</li>
 </ul>
 
 

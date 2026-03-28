@@ -491,6 +491,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#optional-graph-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional graph plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional graph plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relationship_graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#public-routes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -507,6 +535,17 @@
     <span class="md-ellipsis">
       
         /api/2/util/relationships/autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api2utilrelationshipsgraph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /api/2/util/relationships/graph
       
     </span>
   </a>
@@ -607,6 +646,33 @@
     
   
     Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph
   
 
     
@@ -767,6 +833,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#optional-graph-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional graph plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional graph plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relationship_graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#public-routes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -783,6 +877,17 @@
     <span class="md-ellipsis">
       
         /api/2/util/relationships/autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api2utilrelationshipsgraph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /api/2/util/relationships/graph
       
     </span>
   </a>
@@ -1061,12 +1166,153 @@ compatibility:</p>
 </ul>
 <p>See <a href="../schema/#package-autocomplete">Package autocomplete</a> for
 field-level usage.</p>
+<h2 id="optional-graph-plugin">Optional graph plugin</h2>
+<p>The graph action API and graph endpoint are registered only when the optional
+<code>relationship_graph</code> plugin is enabled.</p>
+<h3 id="relationship_graph"><code>relationship_graph</code></h3>
+<p>Returns a graph-shaped JSON payload for the requested center object.</p>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>object_id</code></td>
+<td>yes</td>
+<td>CKAN ID or legacy name of the graph center</td>
+</tr>
+<tr>
+<td><code>object_entity</code></td>
+<td>no</td>
+<td><code>package</code>, <code>organization</code>, or <code>group</code>. Defaults to <code>package</code></td>
+</tr>
+<tr>
+<td><code>object_type</code></td>
+<td>no</td>
+<td>Defaults to <code>dataset</code></td>
+</tr>
+<tr>
+<td><code>depth</code></td>
+<td>no</td>
+<td>Breadth-first traversal depth, <code>1..4</code></td>
+</tr>
+<tr>
+<td><code>relation_types</code></td>
+<td>no</td>
+<td>Filter list of relation types</td>
+</tr>
+<tr>
+<td><code>max_nodes</code></td>
+<td>no</td>
+<td>Node cap, <code>1..300</code>, defaults to <code>100</code></td>
+</tr>
+<tr>
+<td><code>include_unresolved</code></td>
+<td>no</td>
+<td>Include unresolved legacy name-based nodes</td>
+</tr>
+<tr>
+<td><code>include_reverse</code></td>
+<td>no</td>
+<td>Traverse rows where the current node appears as <code>object_id</code></td>
+</tr>
+<tr>
+<td><code>with_titles</code></td>
+<td>no</td>
+<td>Include human-readable titles when available</td>
+</tr>
+</tbody>
+</table>
+<p>Return shape:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">&quot;edges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">&quot;meta&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_nodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>The traversal is breadth-first.</li>
+<li>Cycles are deduplicated with a visited set.</li>
+<li>Legacy rows stored by <code>name</code> are supported.</li>
+<li>If the center object is missing, the action raises <code>NotFound</code>.</li>
+<li>If the current user cannot read the center object, the action raises
+  <code>NotAuthorized</code>.</li>
+</ul>
 <h2 id="public-routes">Public routes</h2>
 <h3 id="api2utilrelationshipsautocomplete"><code>/api/2/util/relationships/autocomplete</code></h3>
 <p>Purpose:</p>
 <ul>
 <li>Frontend endpoint for the package autocomplete widget.</li>
 <li>Useful for custom frontends that want the same search behavior.</li>
+</ul>
+<h3 id="api2utilrelationshipsgraph"><code>/api/2/util/relationships/graph</code></h3>
+<p>Purpose:</p>
+<ul>
+<li>Frontend endpoint for the relationship graph snippet from the optional
+  <code>relationship_graph</code> plugin.</li>
+<li>Returns the <code>relationship_graph</code> payload as JSON.</li>
+</ul>
+<p>Query parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>object_id</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>object_entity</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>object_type</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>depth</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>relation_types</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>max_nodes</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>include_unresolved</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>include_reverse</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>with_titles</code></td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ul>
+<li>Returns <code>404</code> when the center object cannot be resolved.</li>
+<li>Returns <code>403</code> when the current user cannot read the center object.</li>
 </ul>
 <h3 id="relationshipsection"><code>/relationship/section</code></h3>
 <p>Purpose:</p>

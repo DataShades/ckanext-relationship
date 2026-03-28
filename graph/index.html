@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://datashades.github.io/ckanext-relationship/install/">
+        <link rel="canonical" href="https://datashades.github.io/ckanext-relationship/graph/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../dashboard/">
       
       
-        <link rel="next" href="../schema/">
+        <link rel="next" href="../config/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Install - Relationship</title>
+        <title>Graph - Relationship</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#graph" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Install
+              Graph
             
           </span>
         </div>
@@ -280,37 +280,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Install
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
         
   
   
@@ -326,125 +299,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#runtime-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Runtime installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#source-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Source installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enable-ckan-plugins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Enable CKAN plugins
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-the-database-migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run the database migration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restart-ckan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restart CKAN
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#developer-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Developer installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#building-the-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building the documentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running tests
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -561,10 +415,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../graph/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -580,6 +461,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enable-the-graph-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable the graph plugin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-appears" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it appears
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-snippet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph snippet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph snippet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relationship_graphsnippetsgraphhtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_graph/snippets/graph.html
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualization-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualization behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -638,10 +622,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
+  <a href="#enable-the-graph-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirements
+        Enable the graph plugin
       
     </span>
   </a>
@@ -649,10 +633,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-installation" class="md-nav__link">
+  <a href="#where-it-appears" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime installation
+        Where it appears
       
     </span>
   </a>
@@ -660,10 +644,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#source-installation" class="md-nav__link">
+  <a href="#graph-snippet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Source installation
+        Graph snippet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph snippet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relationship_graphsnippetsgraphhtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        relationship_graph/snippets/graph.html
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualization-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualization behavior
       
     </span>
   </a>
@@ -671,10 +683,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enable-ckan-plugins" class="md-nav__link">
+  <a href="#controls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enable CKAN plugins
+        Controls
       
     </span>
   </a>
@@ -682,54 +694,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-the-database-migration" class="md-nav__link">
+  <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run the database migration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restart-ckan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restart CKAN
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#developer-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Developer installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#building-the-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building the documentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running tests
+        API
       
     </span>
   </a>
@@ -756,70 +724,75 @@
   
 
 
-<h1 id="installation">Installation</h1>
-<h2 id="requirements">Requirements</h2>
-<p><code>ckanext-relationship</code> is intended for CKAN sites that already use
-<code>ckanext-scheming</code>.</p>
-<p>The extension targets CKAN 2.10 and newer.</p>
-<h2 id="runtime-installation">Runtime installation</h2>
-<p>Install the base extension in your CKAN virtual environment:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>ckanext-relationship
-</code></pre></div>
-<p>If you also want the admin dashboard, install the optional dashboard extra:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ckanext-relationship[dashboard]&quot;</span>
-</code></pre></div>
-<h2 id="source-installation">Source installation</h2>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/DataShades/ckanext-relationship.git
-<span class="nb">cd</span><span class="w"> </span>ckanext-relationship
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div>
-<p>For the optional dashboard:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dashboard]&quot;</span>
-</code></pre></div>
-<h2 id="enable-ckan-plugins">Enable CKAN plugins</h2>
-<p>For the base relationship features, enable <code>relationship</code> and
-<code>scheming_datasets</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="na">ckan.plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">... relationship scheming_datasets ...</span>
-</code></pre></div>
-<p>For the optional graph UI, also enable <code>relationship_graph</code>.</p>
-<p>If you want the graph snippet on scheming dataset pages, keep
-<code>relationship_graph</code> before <code>scheming_datasets</code> so its template override wins:</p>
+<h1 id="graph">Graph</h1>
+<p>The optional graph plugin provides a Cytoscape-based visualization of
+relationships for datasets, groups, and organizations.</p>
+<h2 id="enable-the-graph-plugin">Enable the graph plugin</h2>
+<p>Enable the base relationship plugin together with <code>relationship_graph</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="na">ckan.plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">... relationship relationship_graph scheming_datasets ...</span>
 </code></pre></div>
-<p>For the optional dashboard, also enable <code>tables</code> and
-<code>relationship_dashboard</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="na">ckan.plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">... relationship scheming_datasets tables relationship_dashboard ...</span>
+<p>If you want the graph snippet to appear on scheming dataset pages, keep
+<code>relationship_graph</code> before <code>scheming_datasets</code> so its template override wins.</p>
+<h2 id="where-it-appears">Where it appears</h2>
+<p>When the plugin is enabled and the dataset type has relationship-backed fields,
+the graph is rendered as a separate section on the dataset page.</p>
+<p>It is not rendered inside the <code>additional_info</code> metadata table.</p>
+<p>Automatic insertion on dataset read pages is controlled by
+<code>ckanext.relationship.show_relationship_graph_on_read</code>, which defaults to
+<code>true</code>.</p>
+<p><img alt="Relationship graph snippet" src="../image/relationships_graph.png" /></p>
+<h2 id="graph-snippet">Graph snippet</h2>
+<p>The reusable snippet is:</p>
+<h3 id="relationship_graphsnippetsgraphhtml"><code>relationship_graph/snippets/graph.html</code></h3>
+<p>Use this snippet when you want to embed the graph manually in a custom template.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">{%</span> <span class="k">snippet</span> <span class="s1">&#39;relationship_graph/snippets/graph.html&#39;</span><span class="o">,</span>
+    <span class="nv">object_id</span><span class="o">=</span><span class="nv">pkg.id</span><span class="o">,</span>
+    <span class="nv">object_entity</span><span class="o">=</span><span class="s1">&#39;package&#39;</span><span class="o">,</span>
+    <span class="nv">object_type</span><span class="o">=</span><span class="nv">pkg.type</span><span class="o">,</span>
+    <span class="nv">depth</span><span class="o">=</span><span class="m">2</span><span class="o">,</span>
+    <span class="nv">max_nodes</span><span class="o">=</span><span class="m">80</span><span class="o">,</span>
+    <span class="nv">relation_types</span><span class="o">=[</span><span class="s1">&#39;related_to&#39;</span><span class="o">],</span>
+    <span class="nv">height</span><span class="o">=</span><span class="s1">&#39;420px&#39;</span> <span class="cp">%}</span>
 </code></pre></div>
-<h2 id="run-the-database-migration">Run the database migration</h2>
-<p>Run the extension migration after installation:</p>
-<div class="highlight"><pre><span></span><code>ckan<span class="w"> </span>-c<span class="w"> </span>/etc/ckan/default/ckan.ini<span class="w"> </span>db<span class="w"> </span>upgrade<span class="w"> </span>-p<span class="w"> </span>relationship
-</code></pre></div>
-<h2 id="restart-ckan">Restart CKAN</h2>
-<p>Restart CKAN after changing plugins or running migrations. For example, on a
-typical Ubuntu/Apache deployment:</p>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>service<span class="w"> </span>apache2<span class="w"> </span>reload
-</code></pre></div>
-<h2 id="developer-installation">Developer installation</h2>
-<p>To work on the extension locally:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/DataShades/ckanext-relationship.git
-<span class="nb">cd</span><span class="w"> </span>ckanext-relationship
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[docs]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>dev-requirements.txt
-</code></pre></div>
-<p>If you are also working on the dashboard:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dashboard,docs]&quot;</span>
-</code></pre></div>
-<h2 id="building-the-documentation">Building the documentation</h2>
-<p>Serve the docs locally:</p>
-<div class="highlight"><pre><span></span><code>mkdocs<span class="w"> </span>serve
-</code></pre></div>
-<p>Build the static site:</p>
-<div class="highlight"><pre><span></span><code>mkdocs<span class="w"> </span>build
-</code></pre></div>
-<h2 id="running-tests">Running tests</h2>
-<p>Run the test suite from the repository root:</p>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>--ckan-ini<span class="o">=</span>test.ini
-</code></pre></div>
+<p>Supported parameters:</p>
+<ul>
+<li><code>object_id</code> (required)</li>
+<li><code>object_entity</code> (default <code>package</code>)</li>
+<li><code>object_type</code> (default <code>dataset</code>)</li>
+<li><code>depth</code> (default <code>1</code>)</li>
+<li><code>max_nodes</code> (default <code>100</code>)</li>
+<li><code>relation_types</code> (optional list)</li>
+<li><code>height</code> (default <code>500px</code>)</li>
+<li><code>show_controls</code> (default <code>true</code>)</li>
+<li><code>show_labels</code> (default <code>false</code>)</li>
+<li><code>layout</code> (default <code>cose</code>)</li>
+<li><code>include_unresolved</code> (default <code>true</code>)</li>
+</ul>
+<h2 id="visualization-behavior">Visualization behavior</h2>
+<ul>
+<li><code>related_to</code> is rendered as a single undirected edge between two nodes</li>
+<li><code>child_of</code> and <code>parent_of</code> are rendered as directed edges</li>
+<li>relation types are distinguished by color and shown in the legend</li>
+<li>relation labels are shown on hover, not as permanent edge text</li>
+<li>node labels can be toggled on and off</li>
+<li>the current dataset is visually highlighted</li>
+</ul>
+<h2 id="controls">Controls</h2>
+<p>When controls are enabled, the snippet provides:</p>
+<ul>
+<li>depth selection</li>
+<li>fit and reload actions</li>
+<li>PNG download of the current graph</li>
+<li>a label visibility toggle</li>
+</ul>
+<h2 id="api">API</h2>
+<p>The plugin also registers:</p>
+<ul>
+<li>the <code>relationship_graph</code> action</li>
+<li>the <code>/api/2/util/relationships/graph</code> JSON endpoint</li>
+</ul>
+<p>See <a href="../actions/">Actions and API</a> for the full request and response contract.</p>
 
 
 
@@ -855,7 +828,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../dashboard/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Dashboard">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -865,20 +838,20 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Dashboard
               </div>
             </div>
           </a>
         
         
           
-          <a href="../schema/" class="md-footer__link md-footer__link--next" aria-label="Next: Scheming Fields">
+          <a href="../config/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Scheming Fields
+                Configuration
               </div>
             </div>
             <div class="md-footer__button md-icon">

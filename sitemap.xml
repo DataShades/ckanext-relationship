@@ -2,30 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
     </url>
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/actions/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
     </url>
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/config/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
     </url>
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/dashboard/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
+    </url>
+    <url>
+         <loc>https://datashades.github.io/ckanext-relationship/graph/</loc>
+         <lastmod>2026-03-28</lastmod>
     </url>
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/helpers/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
     </url>
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/install/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
     </url>
     <url>
          <loc>https://datashades.github.io/ckanext-relationship/schema/</loc>
-         <lastmod>2026-03-25</lastmod>
+         <lastmod>2026-03-28</lastmod>
     </url>
 </urlset>
