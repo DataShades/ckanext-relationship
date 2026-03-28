@@ -2,10 +2,9 @@ import json
 
 import pytest
 
+import ckan.tests.factories as factories
 from ckan.lib.helpers import url_for
 from ckan.tests.helpers import call_action
-
-import ckan.tests.factories as factories
 
 
 @pytest.mark.ckan_config(

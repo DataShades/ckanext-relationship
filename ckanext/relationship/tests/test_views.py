@@ -79,8 +79,7 @@ class TestRelationshipViews:
             for item in json.loads(unrestricted.body)["ResultSet"]["Result"]
         }
         restricted_ids = {
-            item["name"]
-            for item in json.loads(restricted.body)["ResultSet"]["Result"]
+            item["name"] for item in json.loads(restricted.body)["ResultSet"]["Result"]
         }
 
         assert unrestricted_ids == {owned["id"], foreign["id"]}
@@ -101,7 +100,9 @@ class TestRelationshipViews:
 
     def test_related_batch_renders_first_page_and_next_batch_trigger(self, app):
         subject = factories.Dataset(type="package-with-relationship")
-        alpha = factories.Dataset(type="package-with-relationship", title="Alpha related")
+        alpha = factories.Dataset(
+            type="package-with-relationship", title="Alpha related"
+        )
         beta = factories.Dataset(type="package-with-relationship", title="Beta related")
 
         for related in (alpha, beta):
