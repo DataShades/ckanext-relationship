@@ -123,6 +123,52 @@ Return shape:
 See [Package autocomplete](schema/index.md#package-autocomplete) for
 field-level usage.
 
+## Optional graph plugin
+
+The graph action API and graph endpoint are registered only when the optional
+`relationship_graph` plugin is enabled.
+
+### `relationship_graph`
+
+Returns a graph-shaped JSON payload for the requested center object.
+
+Parameters:
+
+| Key | Required | Notes |
+|---|---|---|
+| `object_id` | yes | CKAN ID or legacy name of the graph center |
+| `object_entity` | no | `package`, `organization`, or `group`. Defaults to `package` |
+| `object_type` | no | Defaults to `dataset` |
+| `depth` | no | Breadth-first traversal depth, `1..4` |
+| `relation_types` | no | Filter list of relation types |
+| `max_nodes` | no | Node cap, `1..300`, defaults to `100` |
+| `include_unresolved` | no | Include unresolved legacy name-based nodes |
+| `include_reverse` | no | Traverse rows where the current node appears as `object_id` |
+| `with_titles` | no | Include human-readable titles when available |
+
+Return shape:
+
+```json
+{
+  "nodes": [],
+  "edges": [],
+  "meta": {
+    "depth": 2,
+    "max_nodes": 100,
+    "truncated": false
+  }
+}
+```
+
+Notes:
+
+- The traversal is breadth-first.
+- Cycles are deduplicated with a visited set.
+- Legacy rows stored by `name` are supported.
+- If the center object is missing, the action raises `NotFound`.
+- If the current user cannot read the center object, the action raises
+  `NotAuthorized`.
+
 ## Public routes
 
 ### `/api/2/util/relationships/autocomplete`
@@ -131,6 +177,33 @@ Purpose:
 
 - Frontend endpoint for the package autocomplete widget.
 - Useful for custom frontends that want the same search behavior.
+
+### `/api/2/util/relationships/graph`
+
+Purpose:
+
+- Frontend endpoint for the relationship graph snippet from the optional
+  `relationship_graph` plugin.
+- Returns the `relationship_graph` payload as JSON.
+
+Query parameters:
+
+| Parameter | Required |
+|---|---|
+| `object_id` | yes |
+| `object_entity` | no |
+| `object_type` | no |
+| `depth` | no |
+| `relation_types` | no |
+| `max_nodes` | no |
+| `include_unresolved` | no |
+| `include_reverse` | no |
+| `with_titles` | no |
+
+Notes:
+
+- Returns `404` when the center object cannot be resolved.
+- Returns `403` when the current user cannot read the center object.
 
 ### `/relationship/section`
 

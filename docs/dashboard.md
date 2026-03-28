@@ -51,6 +51,8 @@ types share the same name.
 
 Each logical relationship appears once in the table.
 
+![Relationships dashboard](image/relationships_dashboard.png)
+
 ## Actions
 
 The dashboard supports:

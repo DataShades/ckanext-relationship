@@ -2,6 +2,29 @@
 
 All configuration options are prefixed with `ckanext.relationship.`.
 
+## `ckanext.relationship.show_relationship_graph_on_read`
+
+Controls whether the optional relationship graph section is automatically added
+to dataset read pages when the `relationship_graph` plugin is enabled.
+
+| | |
+|---|---|
+| **Type** | `bool` |
+| **Default** | `true` |
+
+Default effect:
+
+- dataset read pages render the relationship graph section automatically
+- manual use of `relationship_graph/snippets/graph.html` is still available
+
+Example:
+
+```ini
+ckanext.relationship.show_relationship_graph_on_read = false
+```
+
+---
+
 ## `ckanext.relationship.views_without_relationships_in_package_show`
 
 Controls which endpoint names omit relationship-backed fields from
@@ -66,7 +89,7 @@ The Redis queue name used when
 
 | | |
 |---|---|
-| **Type** | `string` |
+| **Type** | `base` |
 | **Default** | `default` |
 
 Example:
@@ -81,6 +104,8 @@ ckanext.relationship.redis_queue_name = relationship
 
 - Keep the default `views_without_relationships_in_package_show` unless you
   explicitly need relationship values on search or read pages.
+- Keep `show_relationship_graph_on_read = true` unless you want to place the
+  graph manually in custom templates or disable it on read pages entirely.
 - Turn on async index rebuilds on larger sites where synchronous reindexing
   slows down create or update requests.
 - Use a dedicated queue name when you want to isolate relationship reindex jobs

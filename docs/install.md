@@ -37,18 +37,27 @@ pip install -e ".[dashboard]"
 
 ## Enable CKAN plugins
 
-For the base relationship features, enable `scheming_datasets` and
-`relationship`:
+For the base relationship features, enable `relationship` and
+`scheming_datasets`:
 
 ```ini
-ckan.plugins = ... scheming_datasets relationship ...
+ckan.plugins = ... relationship scheming_datasets ...
+```
+
+For the optional graph UI, also enable `relationship_graph`.
+
+If you want the graph snippet on scheming dataset pages, keep
+`relationship_graph` before `scheming_datasets` so its template override wins:
+
+```ini
+ckan.plugins = ... relationship relationship_graph scheming_datasets ...
 ```
 
 For the optional dashboard, also enable `tables` and
 `relationship_dashboard`:
 
 ```ini
-ckan.plugins = ... scheming_datasets tables relationship relationship_dashboard ...
+ckan.plugins = ... relationship scheming_datasets tables relationship_dashboard ...
 ```
 
 ## Run the database migration

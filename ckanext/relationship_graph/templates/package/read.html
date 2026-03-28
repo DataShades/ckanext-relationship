@@ -1,0 +1,21 @@
+{% ckan_extends %}
+
+{% block package_additional_info %}
+  {{ super() }}
+
+  {% if h.relationship_show_graph_on_read() and h.relationship_has_relations(pkg.type) %}
+    <h3>{{ _('Relationship graph') }}</h3>
+    <section class="module module-narrow relationship-graph-section">
+      <div class="module-content">
+        {% snippet 'relationship_graph/snippets/graph.html',
+          object_id=pkg.id,
+          object_entity='package',
+          object_type=pkg.type,
+          depth=1,
+          max_nodes=80,
+          relation_types=h.relationship_get_relation_types(pkg.type),
+          height='420px' %}
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

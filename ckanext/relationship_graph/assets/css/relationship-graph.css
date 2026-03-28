@@ -1,0 +1,209 @@
+.module.relationship-graph-section .module-content {
+  padding: 0;
+}
+
+.relationship-graph-snippet {
+  --relationship-graph-node-color: #3f7f8c;
+  --relationship-graph-node-level-1-color: #5d9aa5;
+  --relationship-graph-node-level-2-color: #8bb8bf;
+  --relationship-graph-node-level-3-color: #afccd1;
+  --relationship-graph-node-level-4-color: #d2e3e6;
+  --relationship-graph-node-border-color: #ffffff;
+  --relationship-graph-node-border-width: 2;
+  --relationship-graph-node-size: 34;
+  --relationship-graph-node-label-color: #15323a;
+  --relationship-graph-node-label-font-size: 11;
+  --relationship-graph-node-label-max-width: 120;
+  --relationship-graph-node-label-margin-y: 10;
+  --relationship-graph-node-unresolved-color: #c6c7cb;
+  --relationship-graph-node-unresolved-label-color: #4a4d57;
+  --relationship-graph-node-hover-border-color: #6d8592;
+  --relationship-graph-center-node-color: #e06a3f;
+  --relationship-graph-center-node-border-color: #ffe08a;
+  --relationship-graph-center-node-border-width: 6;
+  --relationship-graph-center-node-size: 48;
+  --relationship-graph-center-node-halo-color: #ffd166;
+  --relationship-graph-center-node-halo-opacity: 0;
+  --relationship-graph-center-node-halo-padding: 8;
+  --relationship-graph-center-node-hover-border-color: #ffe08a;
+  --relationship-graph-center-node-hover-halo-opacity: 0.45;
+  --relationship-graph-center-node-hover-halo-padding: 10;
+  --relationship-graph-edge-width: 3;
+  --relationship-graph-edge-hover-width: 5;
+  --relationship-graph-edge-opacity: 0.9;
+  --relationship-graph-edge-hover-opacity: 1;
+  --relationship-graph-edge-related-to-color: #4a88b5;
+  --relationship-graph-edge-child-of-color: #d17a37;
+  --relationship-graph-edge-parent-of-color: #4b9b6f;
+  --relationship-graph-edge-default-color: #7a8b95;
+  border: 1px solid #d7dde2;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafb 100%);
+  padding: 16px;
+}
+
+.relationship-graph__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8ec;
+}
+
+.relationship-graph__controls label {
+  margin: 0;
+  color: #4b5964;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.relationship-graph__controls select {
+  min-width: 72px;
+}
+
+.relationship-graph__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 0 6px;
+  color: #4b5964;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.relationship-graph__toggle:after {
+  content: none;
+}
+
+.relationship-graph__toggle input {
+  margin: 0;
+}
+
+.relationship-graph__status {
+  min-height: 20px;
+  margin-bottom: 8px;
+  color: #55636e;
+  font-size: 12px;
+}
+
+.relationship-graph__status--loading,
+.relationship-graph__status--empty {
+  color: #5f6f79;
+}
+
+.relationship-graph__status--error {
+  color: #b14343;
+}
+
+.relationship-graph__viewport {
+  position: relative;
+}
+
+.relationship-graph {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #d9e0e5;
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.96), rgba(245, 248, 250, 0.95)),
+    linear-gradient(135deg, rgba(63, 127, 140, 0.05), rgba(216, 100, 59, 0.05));
+}
+
+.relationship-graph__legend {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: none;
+  min-width: 140px;
+  max-width: 220px;
+  padding: 10px 12px;
+  border: 1px solid rgba(215, 221, 226, 0.95);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 24px rgba(21, 50, 58, 0.08);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+.relationship-graph__legend-title {
+  margin-bottom: 8px;
+  color: #495863;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.relationship-graph__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #44525d;
+  font-size: 12px;
+}
+
+.relationship-graph__legend-item + .relationship-graph__legend-item {
+  margin-top: 6px;
+}
+
+.relationship-graph__legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.relationship-graph__tooltip {
+  position: absolute;
+  z-index: 3;
+  display: none;
+  max-width: 180px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(24, 35, 41, 0.92);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(21, 50, 58, 0.2);
+}
+
+.relationship-graph__meta {
+  min-height: 18px;
+  margin-top: 8px;
+  color: #6b7882;
+  font-size: 12px;
+}
+
+@media (max-width: 767px) {
+  .relationship-graph-snippet {
+    padding: 12px;
+  }
+
+  .relationship-graph__legend {
+    top: 8px;
+    right: 8px;
+    min-width: 120px;
+    max-width: calc(100% - 16px);
+    padding: 8px 10px;
+  }
+
+  .relationship-graph__controls {
+    align-items: stretch;
+  }
+
+  .relationship-graph__controls label,
+  .relationship-graph__controls select,
+  .relationship-graph__controls .btn,
+  .relationship-graph__toggle {
+    width: 100%;
+  }
+
+  .relationship-graph__toggle {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+}

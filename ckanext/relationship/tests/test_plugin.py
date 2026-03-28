@@ -19,6 +19,24 @@ def test_plugin_registers_actions_helpers_and_validators():
     assert "relationship_related_entity" in plugin.get_validators()
 
 
+@pytest.mark.ckan_config("ckan.plugins", "relationship relationship_graph")
+@pytest.mark.usefixtures("with_plugins")
+def test_relationship_graph_plugin_registers_optional_graph_features():
+    plugin = p.get_plugin("relationship_graph")
+
+    assert plugin is not None
+    assert p.plugin_loaded("relationship_graph")
+    assert "relationship_graph" in plugin.get_actions()
+    assert "relationship_get_relation_types" in plugin.get_helpers()
+    assert "relationship_show_graph_on_read" in plugin.get_helpers()
+    helper = plugin.get_helpers()["relationship_get_relation_types"]
+    assert set(helper("package-with-relationship")) == {
+        "related_to",
+        "child_of",
+        "parent_of",
+    }
+
+
 @pytest.mark.usefixtures("clean_db")
 def test_before_dataset_index_moves_relationship_ids_to_vocab_field():
     subject = factories.Dataset(type="package-with-relationship")

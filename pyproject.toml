@@ -34,6 +34,7 @@ docs = ["mkdocs", "mkdocs-material"]
 [project.entry-points."ckan.plugins"]
 relationship = "ckanext.relationship.plugin:RelationshipPlugin"
 relationship_dashboard = "ckanext.relationship_dashboard.plugin:RelationshipDashboardPlugin"
+relationship_graph = "ckanext.relationship_graph.plugin:RelationshipGraphPlugin"
 
 [project.entry-points."babel.extractors"]
 ckan = "ckan.lib.extract:extract_ckan"
@@ -117,12 +118,12 @@ section-order = [
 # Group all Django imports into a separate section.
 ckan = ["ckan"]
 ckanext = ["ckanext"]
-self = ["ckanext.relationship", "ckanext.relationship_dashboard"]
+self = ["ckanext.relationship", "ckanext.relationship_dashboard", "ckanext.relationship_graph"]
 
 [tool.isort]
 known_ckan = "ckan"
 known_ckanext = "ckanext"
-known_self = "ckanext.relationship,ckanext.relationship_dashboard"
+known_self = "ckanext.relationship,ckanext.relationship_dashboard,ckanext.relationship_graph"
 sections = "FUTURE,STDLIB,FIRSTPARTY,THIRDPARTY,CKAN,CKANEXT,SELF,LOCALFOLDER"
 profile = "black"
 

@@ -104,3 +104,37 @@ class TestPackageShow:
             )
 
         assert result["related_packages"] == [object_dataset["id"]]
+
+    def test_package_show_includes_parent_and_child_relationships_when_requested(
+        self,
+        test_request_context,
+    ):
+        subject_dataset = factories.Dataset(type="package-with-relationship")
+        parent_dataset = factories.Dataset(type="package-with-relationship")
+        child_dataset = factories.Dataset(type="package-with-relationship")
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=subject_dataset["id"],
+            object_id=parent_dataset["id"],
+            relation_type="child_of",
+        )
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=subject_dataset["id"],
+            object_id=child_dataset["id"],
+            relation_type="parent_of",
+        )
+
+        with test_request_context(f"/dataset/{subject_dataset['name']}"):
+            result = call_action(
+                "package_show",
+                {"ignore_auth": True},
+                id=subject_dataset["id"],
+                with_relationships=True,
+            )
+
+        assert result["parent_packages"] == [parent_dataset["id"]]
+        assert result["child_packages"] == [child_dataset["id"]]

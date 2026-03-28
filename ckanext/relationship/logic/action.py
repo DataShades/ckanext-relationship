@@ -17,8 +17,6 @@ from ckanext.relationship.logic import schema
 from ckanext.relationship.model.relationship import Relationship
 from ckanext.relationship.utils import entity_name_by_id
 
-NotFound = logic.NotFound
-
 
 def get_actions():
     return {
@@ -185,11 +183,9 @@ def relationship_get_entity_list(
     """Return ids list of specified entity (entity, entity_type)."""
     tk.check_access("relationship_get_entity_list", context, data_dict)
 
-    model = context["model"]
-
     entity = data_dict["entity"]
     entity = entity if entity != "organization" else "group"
-    entity_class = logic.model_name_to_class(model, entity)
+    entity_class = logic.model_name_to_class(context["model"], entity)
 
     return (
         context["session"]

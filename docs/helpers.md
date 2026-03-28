@@ -39,6 +39,23 @@ Formats autocomplete results into CKAN’s expected completion JSON shape.
 You can replace it by passing another helper name with
 `format_autocomplete_helper`.
 
+The following graph helpers are registered only when the optional
+`relationship_graph` plugin is enabled.
+
+### `relationship_has_relations(pkg_type)`
+
+Returns `True` when the given dataset type has relationship-backed scheming
+fields.
+
+### `relationship_get_relation_types(pkg_type)`
+
+Returns the distinct relationship types configured for the given dataset type.
+
+### `relationship_show_graph_on_read()`
+
+Returns whether the graph section should be added automatically to dataset read
+pages.
+
 ## Scheming snippets
 
 ### `scheming/form_snippets/related_entity.html`
@@ -96,6 +113,13 @@ This is the follow-up snippet used by `/relationship/section`.
 
 Simple loading indicator used by the package list snippets.
 
+## Graph snippet
+
+The reusable graph snippet is `relationship_graph/snippets/graph.html`.
+
+For full usage, controls, rendering behavior, and screenshots, see
+[Graph](graph.md).
+
 ## When to use which rendering approach
 
 | Need | Recommended piece |
@@ -109,3 +133,5 @@ Simple loading indicator used by the package list snippets.
 
 - The autocomplete helpers and endpoint are package-only.
 - The HTMX route and batch snippets are package-only.
+- The graph snippet, graph helpers, and `/api/2/util/relationships/graph`
+  route require the optional `relationship_graph` plugin.

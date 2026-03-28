@@ -23,6 +23,22 @@ dataset_fields:
     related_entity_type: package-with-relationship
     relation_type: related_to
 
+  - field_name: parent_packages
+    preset: related_entity
+    label: Parent Packages
+    validators: relationship_related_entity
+    related_entity: package
+    related_entity_type: package-with-relationship
+    relation_type: child_of
+
+  - field_name: child_packages
+    preset: related_entity
+    label: Child Packages
+    validators: relationship_related_entity
+    related_entity: package
+    related_entity_type: package-with-relationship
+    relation_type: parent_of
+
 resource_fields:
 
 - field_name: url

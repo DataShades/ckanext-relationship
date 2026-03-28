@@ -37,6 +37,7 @@ watch:
   - docs/
   - ckanext/relationship/
   - ckanext/relationship_dashboard/
+  - ckanext/relationship_graph/
 
 nav:
   - Home: index.md
@@ -45,6 +46,7 @@ nav:
   - Actions and API: actions.md
   - Helpers and Templates: helpers.md
   - Dashboard: dashboard.md
+  - Graph: graph.md
   - Configuration: config.md
 
 markdown_extensions:

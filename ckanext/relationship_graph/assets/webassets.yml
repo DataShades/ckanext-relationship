@@ -1,0 +1,20 @@
+relationship-graph-vendor:
+  filters: rjsmin
+  output: ckanext-relationship-graph/%(version)s-relationship-graph-vendor.js
+  contents:
+    - js/vendor/cytoscape.js
+
+relationship-graph-js:
+  filters: rjsmin
+  output: ckanext-relationship-graph/%(version)s-relationship-graph.js
+  contents:
+    - js/relationship-graph.js
+  extra:
+    preload:
+      - base/main
+      - relationship_graph/relationship-graph-vendor
+
+relationship-graph-css:
+  output: ckanext-relationship-graph/%(version)s-relationship-graph.css
+  contents:
+    - css/relationship-graph.css

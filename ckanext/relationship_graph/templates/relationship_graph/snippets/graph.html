@@ -1,0 +1,73 @@
+{% set graph_depth = depth|default(1) %}
+{% set graph_max_nodes = max_nodes|default(100) %}
+{% set graph_height = height|default('500px') %}
+{% set graph_layout = layout|default('cose') %}
+{% set graph_relation_types = relation_types|default([], true) %}
+{% set graph_show_controls = show_controls if show_controls is defined else True %}
+{% set graph_show_labels = show_labels if show_labels is defined else False %}
+
+{% asset 'relationship_graph/relationship-graph-css' %}
+{% asset 'relationship_graph/relationship-graph-js' %}
+
+<div
+        class="relationship-graph-snippet"
+        data-module="relationship-graph"
+        data-graph-endpoint="{{ h.url_for('relationship_graph.relationship_graph_api') }}"
+        data-object-id="{{ object_id }}"
+        data-object-entity="{{ object_entity|default('package') }}"
+        data-object-type="{{ object_type|default('dataset') }}"
+        data-depth="{{ graph_depth }}"
+        data-max-nodes="{{ graph_max_nodes }}"
+        data-layout="{{ graph_layout }}"
+        data-show-labels="{{ 'true' if graph_show_labels else 'false' }}"
+        data-include-unresolved="{{ 'true' if include_unresolved|default(true) else 'false' }}"
+        data-relation-types='{{ h.dump_json(graph_relation_types)|e }}'>
+    <div class="relationship-graph__status" data-graph-role="status"></div>
+    <div class="relationship-graph__viewport" data-graph-role="viewport">
+        <div
+                class="relationship-graph"
+                data-graph-role="canvas"
+                style="height: {{ graph_height }};"></div>
+        <div class="relationship-graph__legend" data-graph-role="legend"></div>
+        <div class="relationship-graph__tooltip" data-graph-role="tooltip"></div>
+    </div>
+    <div class="relationship-graph__meta" data-graph-role="meta"></div>
+
+    {% if graph_show_controls %}
+    <div class="relationship-graph__controls">
+        <label for="relationship-graph-depth-{{ object_id }}">{{ _('Depth') }}</label>
+        <select
+                id="relationship-graph-depth-{{ object_id }}"
+                class="form-control input-sm"
+                data-graph-role="depth">
+            {% for option in range(1, 5) %}
+            <option value="{{ option }}" {% if option== graph_depth %} selected{% endif
+                    %}>
+                {{ option }}
+            </option>
+            {% endfor %}
+        </select>
+        <label class="relationship-graph__toggle"
+               for="relationship-graph-labels-toggle-{{ object_id }}">
+            <input type="checkbox"
+                   id="relationship-graph-labels-toggle-{{ object_id }}"
+                   class="relationship-graph__toggle-input"
+                   data-graph-role="labels-toggle"
+                   {% if graph_show_labels %}checked{% endif %}>
+            <span class="relationship-graph__toggle-text">{{ _('Show labels') }}</span>
+        </label>
+        <button type="button" class="btn btn-default btn-sm" data-graph-role="fit">
+            {{ _('Fit') }}
+        </button>
+        <button type="button" class="btn btn-default btn-sm" data-graph-role="reload">
+            {{ _('Reload') }}
+        </button>
+        <button type="button"
+                class="btn btn-default btn-sm"
+                data-graph-role="download"
+                disabled>
+            {{ _('Download PNG') }}
+        </button>
+    </div>
+    {% endif %}
+</div>
