@@ -108,9 +108,11 @@ class TestRelationshipGraphTemplates:
         )
 
     def test_graph_bundles_are_declared_separately(self):
-        webassets = Path(
-            "/home/aleks/Projects/relationship/src/ckanext-relationship/"
-            "ckanext/relationship_graph/assets/webassets.yml"
+        webassets = (
+            Path(__file__).resolve().parents[2]
+            / "relationship_graph"
+            / "assets"
+            / "webassets.yml"
         ).read_text()
 
         assert "relationship-graph-vendor:" in webassets
