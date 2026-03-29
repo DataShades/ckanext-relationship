@@ -12,7 +12,7 @@ from ckan.types import Context
 
 import ckanext.scheming.helpers as sch
 
-from ckanext.relationship import config, helpers, utils, views
+from ckanext.relationship import config, helpers, relation_types, utils, views
 from ckanext.relationship.logic import action, auth, validators
 from ckanext.relationship.model.relationship import Relationship
 
@@ -282,7 +282,7 @@ def _canonicalize_relation_pair(
 ) -> bool:
     current_subject_id, current_object_id, relation_type = current_relation
     canonical_subject_id, canonical_object_id = canonical_relation
-    reverse_relation_type = Relationship.reverse_relation_type[relation_type]
+    reverse_relation_type = relation_types.get_reverse_relation_type(relation_type)
     current_forward = _exact_relation(
         session,
         current_subject_id,

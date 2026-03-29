@@ -27,6 +27,7 @@ def test_relationship_graph_plugin_registers_optional_graph_features():
     assert plugin is not None
     assert p.plugin_loaded("relationship_graph")
     assert "relationship_graph" in plugin.get_actions()
+    assert "relationship_get_relation_definitions" in plugin.get_helpers()
     assert "relationship_get_relation_types" in plugin.get_helpers()
     assert "relationship_has_existing_relations" in plugin.get_helpers()
     assert "relationship_show_graph_on_dataset_read" in plugin.get_helpers()

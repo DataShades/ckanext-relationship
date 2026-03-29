@@ -3,6 +3,8 @@ from __future__ import annotations
 from ckan.logic.schema import validator_args
 from ckan.types import Schema, Validator, ValidatorFactory
 
+from ckanext.relationship import relation_types
+
 
 @validator_args
 def relation_create(
@@ -20,7 +22,7 @@ def relation_create(
             not_empty,
         ],
         "relation_type": [
-            one_of(["related_to", "child_of", "parent_of"]),
+            one_of(relation_types.get_relation_types()),
         ],
         "extras": [default("{}"), convert_to_json_if_string, dict_only],
     }
@@ -39,7 +41,7 @@ def relation_delete(
         ],
         "relation_type": [
             ignore_missing,
-            one_of(["related_to", "child_of", "parent_of"]),
+            one_of(relation_types.get_relation_types()),
         ],
     }
 
@@ -61,7 +63,7 @@ def relations_list(
         ],
         "relation_type": [
             ignore_missing,
-            one_of(["related_to", "child_of", "parent_of"]),
+            one_of(relation_types.get_relation_types()),
         ],
     }
 
@@ -83,7 +85,7 @@ def relations_ids_list(
         ],
         "relation_type": [
             ignore_missing,
-            one_of(["related_to", "child_of", "parent_of"]),
+            one_of(relation_types.get_relation_types()),
         ],
     }
 

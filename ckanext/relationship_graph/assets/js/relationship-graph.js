@@ -77,11 +77,20 @@ this.ckan.module("relationship-graph", function ($) {
     _readConfig: function () {
       var el = this.el[0];
       var relationTypes = [];
+      var relationDefinitions = {};
 
       try {
         relationTypes = JSON.parse(el.getAttribute("data-relation-types") || "[]");
       } catch (err) {
         relationTypes = [];
+      }
+
+      try {
+        relationDefinitions = JSON.parse(
+          el.getAttribute("data-relation-definitions") || "{}"
+        );
+      } catch (err) {
+        relationDefinitions = {};
       }
 
       return {
@@ -95,7 +104,8 @@ this.ckan.module("relationship-graph", function ($) {
         includeUnresolved:
           (el.getAttribute("data-include-unresolved") || "true") === "true",
         layout: el.getAttribute("data-layout") || "cose",
-        relationTypes: relationTypes
+        relationTypes: relationTypes,
+        relationDefinitions: relationDefinitions
       };
     },
 
@@ -357,8 +367,8 @@ this.ckan.module("relationship-graph", function ($) {
 
     _relationDefinitions: function () {
       var theme = this.theme || this._readTheme();
-
-      return {
+      var configured = this.config.relationDefinitions || {};
+      var definitions = {
         related_to: {
           color: theme.edgeRelatedToColor,
           label: this._("Related to")
@@ -372,6 +382,20 @@ this.ckan.module("relationship-graph", function ($) {
           label: this._("Parent of")
         }
       };
+
+      $.each(configured, function (relationType, definition) {
+        var current = definitions[relationType] || {};
+
+        definitions[relationType] = {
+          color: definition.color || current.color || theme.edgeDefaultColor,
+          label:
+            definition.label ||
+            current.label ||
+            relationType.replace(/_/g, " ")
+        };
+      });
+
+      return definitions;
     },
 
     _relationInfo: function (relationType) {

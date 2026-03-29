@@ -11,6 +11,8 @@ from typing_extensions import override
 from ckan import logic, model
 from ckan.model.types import make_uuid
 
+from ckanext.relationship.relation_types import DEFAULT_RELATION_TYPE_REVERSE_MAP
+
 from .base import Base
 
 
@@ -33,11 +35,7 @@ class Relationship(Base):
     created_at: Mapped[datetime]
     extras: Mapped[dict[str, Any]]
 
-    reverse_relation_type: dict[str, Any] = {
-        "related_to": "related_to",
-        "child_of": "parent_of",
-        "parent_of": "child_of",
-    }
+    reverse_relation_type: dict[str, Any] = DEFAULT_RELATION_TYPE_REVERSE_MAP.copy()
 
     @override
     def __repr__(self):

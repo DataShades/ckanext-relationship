@@ -76,10 +76,16 @@ Supported parameters:
 
 - datasets, organizations, and groups use different node colors
 - node types are shown in the legend with circular color markers
-- `related_to` is rendered as a single undirected edge between two nodes
-- `child_of` and `parent_of` are rendered as directed edges
+- self-reversing relation types such as `related_to` are rendered as a single
+  undirected edge between two nodes
+- asymmetric relation types such as `child_of` and `parent_of` are rendered as
+  directed edges
 - relation types are distinguished by color and shown in the legend with line
   markers
+- custom relation types can provide their own legend label and edge color via
+  `ckanext.relationship.interfaces.IRelationship.get_relationship_type_metadata()`
+- custom relation types without explicit UI metadata use a generic fallback
+  label and edge color
 - relation labels are shown on hover, not as permanent edge text
 - node labels can be toggled on and off
 - the current object is visually highlighted

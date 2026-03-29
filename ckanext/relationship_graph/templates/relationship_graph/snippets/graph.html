@@ -3,6 +3,7 @@
 {% set graph_height = height|default('500px') %}
 {% set graph_layout = layout|default('cose') %}
 {% set graph_relation_types = relation_types|default([], true) %}
+{% set graph_relation_definitions = h.relationship_get_relation_definitions() %}
 {% set graph_show_controls = show_controls if show_controls is defined else True %}
 {% set graph_show_labels = show_labels if show_labels is defined else False %}
 
@@ -21,7 +22,8 @@
         data-layout="{{ graph_layout }}"
         data-show-labels="{{ 'true' if graph_show_labels else 'false' }}"
         data-include-unresolved="{{ 'true' if include_unresolved|default(true) else 'false' }}"
-        data-relation-types='{{ h.dump_json(graph_relation_types)|e }}'>
+        data-relation-types='{{ h.dump_json(graph_relation_types)|e }}'
+        data-relation-definitions='{{ h.dump_json(graph_relation_definitions)|e }}'>
     <div class="relationship-graph__status" data-graph-role="status"></div>
     <div class="relationship-graph__viewport" data-graph-role="viewport">
         <div

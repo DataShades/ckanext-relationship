@@ -4,6 +4,7 @@ import ckan.plugins.toolkit as tk
 from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
+from ckanext.relationship import relation_types
 from ckanext.relationship.model.relationship import Relationship
 
 
@@ -294,9 +295,8 @@ class TestRelationCreate:
         )
 
         assert result[0]["relation_type"] == relation_type
-        assert (
-            result[1]["relation_type"]
-            == Relationship.reverse_relation_type[relation_type]
+        assert result[1]["relation_type"] == relation_types.get_reverse_relation_type(
+            relation_type
         )
 
     def test_no_subject_id(self):

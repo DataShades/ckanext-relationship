@@ -6,11 +6,14 @@ can optionally expose an interactive graph UI and a sysadmin dashboard.
 
 ## Relationship types
 
-The extension supports three relationship types:
+The extension ships with three built-in relationship types:
 
 - `related_to` creates `A related_to B` and `B related_to A`
 - `child_of` creates `A child_of B` and `B parent_of A`
 - `parent_of` creates `A parent_of B` and `B child_of A`
+
+Additional relationship types can be registered by other extensions via
+`ckanext.relationship.interfaces.IRelationship`.
 
 ## What the extension includes
 

@@ -11,7 +11,7 @@ from ckan import authz, logic
 from ckan.logic import validate
 from ckan.types import Action, Context
 
-from ckanext.relationship import utils
+from ckanext.relationship import relation_types, utils
 from ckanext.relationship.config import (
     allow_name_based_relation_create,
     views_without_relationships_in_package_show,
@@ -62,7 +62,7 @@ def relationship_relation_create(
     reverse_relation = Relationship(
         subject_id=object_id,
         object_id=subject_id,
-        relation_type=Relationship.reverse_relation_type[relation_type],
+        relation_type=relation_types.get_reverse_relation_type(relation_type),
         extras=extras,
     )
 
@@ -152,7 +152,7 @@ def relationship_relation_delete(
     if relation_type:
         reverse_relation = reverse_relation.filter(
             Relationship.relation_type
-            == Relationship.reverse_relation_type[relation_type],
+            == relation_types.get_reverse_relation_type(relation_type),
         )
 
     reverse_relation = reverse_relation.all()

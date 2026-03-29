@@ -28,7 +28,7 @@ relationship field uses a mix of:
 |---|---|
 | `related_entity` | Target kind: `package`, `organization`, or `group` |
 | `related_entity_type` | The type of the related entity |
-| `relation_type` | `related_to`, `child_of`, or `parent_of` |
+| `relation_type` | One of the configured relationship types |
 
 ## Optional relationship keys
 
@@ -81,6 +81,9 @@ These keys are only relevant when `form_snippet` is set to
 | `related_to` | Symmetric relationship |
 | `child_of` | The current entity is the child |
 | `parent_of` | The current entity is the parent |
+
+These are the built-in types. Other extensions can register additional types by
+implementing `ckanext.relationship.interfaces.IRelationship`.
 
 ## Target entities
 

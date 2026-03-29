@@ -11,6 +11,7 @@ from ckan import logic, model
 from ckan.logic import validate
 from ckan.types import Context
 
+from ckanext.relationship import relation_types as relation_type_registry
 from ckanext.relationship.model.relationship import Relationship
 from ckanext.relationship_graph.logic import schema
 
@@ -259,7 +260,7 @@ def _validate_graph_data(data_dict: dict[str, Any]) -> list[str]:
 
     relation_types: list[str] = []
     for relation_type in data_dict.get("relation_types") or []:
-        if relation_type not in Relationship.reverse_relation_type:
+        if not relation_type_registry.is_supported_relation_type(relation_type):
             errors.setdefault("relation_types", []).append(
                 f"Unsupported relation type: {relation_type}"
             )
@@ -679,7 +680,7 @@ def _build_graph_edge(
     source_node_id: str,
     target_node_id: str,
 ) -> dict[str, Any]:
-    if relation.relation_type == "related_to":
+    if relation_type_registry.is_symmetric_relation_type(relation.relation_type):
         source_node_id, target_node_id = sorted([source_node_id, target_node_id])
         edge_id = f"{relation.relation_type}:{source_node_id}:{target_node_id}"
     else:
@@ -690,7 +691,9 @@ def _build_graph_edge(
         "source": source_node_id,
         "target": target_node_id,
         "relation_type": relation.relation_type,
-        "directed": relation.relation_type != "related_to",
+        "directed": not relation_type_registry.is_symmetric_relation_type(
+            relation.relation_type
+        ),
     }
 
 

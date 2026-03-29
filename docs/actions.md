@@ -15,7 +15,7 @@ Parameters:
 |---|---|---|
 | `subject_id` | yes | Use the CKAN ID. For direct action calls, `name + name` is allowed only when `ckanext.relationship.allow_name_based_relation_create = true` |
 | `object_id` | yes | Use the CKAN ID. For direct action calls, `name + name` is allowed only when `ckanext.relationship.allow_name_based_relation_create = true` |
-| `relation_type` | yes | `related_to`, `child_of`, or `parent_of` |
+| `relation_type` | yes | One of the configured relationship types. Built-ins are `related_to`, `child_of`, and `parent_of` |
 | `extras` | no | Extra metadata stored with the relationship |
 
 Behavior:
@@ -67,7 +67,7 @@ Parameters:
 | `subject_id` | yes | Use the subject entity ID. Name lookups are supported only for some legacy rows |
 | `object_entity` | no | `package`, `organization`, or `group` |
 | `object_type` | no | Related entity type |
-| `relation_type` | no | `related_to`, `child_of`, or `parent_of` |
+| `relation_type` | no | One of the configured relationship types |
 
 ### `relationship_relations_ids_list`
 
@@ -96,6 +96,38 @@ compatibility:
 - the same scheming flow can later rewrite that temporary or legacy
   `name + name`, `id + name`, or `name + id` row to canonical `id + id` once
   both local entities exist
+
+### Extending relationship types
+
+Other extensions can register additional relationship types by implementing
+`ckanext.relationship.interfaces.IRelationship` and returning a mapping of
+`relation_type -> reverse_relation_type`.
+
+For example:
+
+```python
+import ckan.plugins as p
+
+from ckanext.relationship.interfaces import IRelationship
+
+
+class CustomRelationshipPlugin(p.SingletonPlugin):
+    p.implements(IRelationship)
+
+    def get_relationship_types(self):
+        return {
+            "depends_on": "required_by",
+            "required_by": "depends_on",
+            "references": "references",
+        }
+
+    def get_relationship_type_metadata(self):
+        return {
+            "depends_on": {"label": "Depends on", "color": "#7b61ff"},
+            "required_by": {"label": "Required by", "color": "#f08c2e"},
+            "references": {"label": "References", "color": "#2a9d8f"},
+        }
+```
 
 ### `relationship_get_entity_list`
 

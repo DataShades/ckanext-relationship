@@ -103,6 +103,7 @@ class TestRelationshipGraphTemplates:
         assert 'data-graph-role="download"' in html
         assert 'data-graph-role="legend"' in html
         assert 'data-graph-role="tooltip"' in html
+        assert "data-relation-definitions=" in html
         assert html.index('data-graph-role="viewport"') < html.index(
             'data-graph-role="depth"'
         )

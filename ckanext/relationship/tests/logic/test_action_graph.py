@@ -5,6 +5,7 @@ from ckan import logic, model
 from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
+from ckanext.relationship import relation_types
 from ckanext.relationship.model.relationship import Relationship
 from ckanext.relationship_graph.logic import action as graph_action
 
@@ -27,7 +28,7 @@ def _insert_legacy_relation(
     object_id: str,
     relation_type: str,
 ) -> None:
-    reverse_relation_type = Relationship.reverse_relation_type[relation_type]
+    reverse_relation_type = relation_types.get_reverse_relation_type(relation_type)
     model.Session.add(
         Relationship(
             subject_id=subject_id,

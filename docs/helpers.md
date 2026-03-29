@@ -51,6 +51,15 @@ fields.
 
 Returns the distinct relationship types configured for the given dataset type.
 
+### `relationship_get_relation_definitions()`
+
+Returns the graph UI definitions for all known relationship types.
+
+Each definition may include:
+
+- `label`: the legend label
+- `color`: the edge and legend color override
+
 ### `relationship_show_graph_on_dataset_read()`
 
 Returns whether the graph section should be added automatically to dataset read

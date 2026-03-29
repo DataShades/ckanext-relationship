@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import sqlalchemy as sa
 
+import ckan.plugins.toolkit as tk
 from ckan import model
 
-from ckanext.relationship import config, utils
+from ckanext.relationship import config, relation_types, utils
 from ckanext.relationship.model.relationship import Relationship
 
 
@@ -12,6 +13,7 @@ def get_helpers():
     helper_functions = [
         relationship_has_relations,
         relationship_has_existing_relations,
+        relationship_get_relation_definitions,
         relationship_get_relation_types,
         relationship_show_graph_on_dataset_read,
         relationship_show_graph_on_read,
@@ -33,6 +35,32 @@ def relationship_get_relation_types(pkg_type: str) -> list[str]:
             relation_types.append(relation_type)
 
     return relation_types
+
+
+def relationship_get_relation_definitions() -> dict[str, dict[str, str | None]]:
+    definitions = {
+        "related_to": {"label": tk._("Related to"), "color": None},
+        "child_of": {"label": tk._("Child of"), "color": None},
+        "parent_of": {"label": tk._("Parent of"), "color": None},
+    }
+
+    for relation_type in relation_types.get_relation_types():
+        definitions.setdefault(
+            relation_type,
+            {
+                "label": relation_type.replace("_", " ").title(),
+                "color": None,
+            },
+        )
+
+    for relation_type, metadata in relation_types.get_relation_type_metadata().items():
+        definitions.setdefault(relation_type, {"label": relation_type, "color": None})
+        if metadata.get("label"):
+            definitions[relation_type]["label"] = metadata["label"]
+        if metadata.get("color"):
+            definitions[relation_type]["color"] = metadata["color"]
+
+    return definitions
 
 
 def relationship_has_existing_relations(subject_id: str) -> bool:
