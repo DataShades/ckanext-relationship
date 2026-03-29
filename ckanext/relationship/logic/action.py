@@ -12,7 +12,10 @@ from ckan.logic import validate
 from ckan.types import Action, Context
 
 from ckanext.relationship import utils
-from ckanext.relationship.config import views_without_relationships_in_package_show
+from ckanext.relationship.config import (
+    allow_name_based_relation_create,
+    views_without_relationships_in_package_show,
+)
 from ckanext.relationship.logic import schema
 from ckanext.relationship.model.relationship import Relationship
 from ckanext.relationship.utils import entity_name_by_id
@@ -44,6 +47,8 @@ def relationship_relation_create(
     relation_type = data_dict["relation_type"]
     extras = data_dict.get("extras", {})
 
+    _validate_relation_identifiers(subject_id, object_id)
+
     if Relationship.by_object_id(subject_id, object_id, relation_type):
         return []
 
@@ -66,6 +71,34 @@ def relationship_relation_create(
     context["session"].commit()
 
     return [rel.as_dict() for rel in (relation, reverse_relation)]
+
+
+def _validate_relation_identifiers(subject_id: str, object_id: str) -> None:
+    subject_uses_id = utils.is_uuid(subject_id)
+    object_uses_id = utils.is_uuid(object_id)
+
+    if subject_uses_id != object_uses_id:
+        message = tk._(
+            "subject_id and object_id must both use ids or both use names"
+        )
+        raise tk.ValidationError(
+            {
+                "subject_id": [message],
+                "object_id": [message],
+            }
+        )
+
+    if not subject_uses_id and not allow_name_based_relation_create():
+        raise tk.ValidationError(
+            {
+                "object_id": [
+                    tk._(
+                        "Creating relationships by name is disabled by "
+                        "ckanext.relationship.allow_name_based_relation_create"
+                    )
+                ]
+            }
+        )
 
 
 @validate(schema.relation_delete)

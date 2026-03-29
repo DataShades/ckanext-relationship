@@ -11,6 +11,8 @@ from ckanext.scheming.validation import (
     scheming_validator,  # pyright: ignore[reportUnknownVariableType]
 )
 
+from ckanext.relationship import config, utils
+
 
 def get_validators():
     return {
@@ -42,8 +44,28 @@ def relationship_related_entity(field: dict[str, Any], schema: dict[str, Any]):
             relation_type,
         )
 
-        selected_relations = get_selected_relations(data[key])
-        data[key] = json.dumps(list(selected_relations))
+        selected_relations = normalize_relation_identifiers(
+            get_selected_relations(data[key]),
+            related_entity,
+            related_entity_type,
+        )
+
+        if not config.allow_name_based_relation_create():
+            invalid_name_relations = {
+                relation
+                for relation in selected_relations - current_relations
+                if not utils.is_uuid(relation)
+            }
+            if invalid_name_relations:
+                errors[key].append(
+                    tk._(
+                        "Creating relationships by name is disabled by "
+                        "ckanext.relationship.allow_name_based_relation_create"
+                    )
+                )
+                return
+
+        data[key] = json.dumps(sorted(selected_relations))
 
         add_relations = selected_relations - current_relations
         del_relations = current_relations - selected_relations
@@ -73,10 +95,14 @@ def get_current_relations(
                 "relation_type": relation_type,
             },
         )
-        current_relations = [rel["object_id"] for rel in current_relations]
+        current_relations = normalize_relation_identifiers(
+            {rel["object_id"] for rel in current_relations},
+            related_entity,
+            related_entity_type,
+        )
     else:
-        current_relations = []
-    return set(current_relations)
+        current_relations = set()
+    return current_relations
 
 
 def get_selected_relations(selected_relations: list[Any] | str | None) -> set[str]:
@@ -101,3 +127,15 @@ def get_selected_relations(selected_relations: list[Any] | str | None) -> set[st
     else:
         selected_relations = []
     return set(selected_relations)
+
+
+def normalize_relation_identifiers(
+    identifiers: set[str],
+    related_entity: str | None,
+    related_entity_type: str | None,
+) -> set[str]:
+    return {
+        utils.resolve_entity_name_to_id(related_entity, related_entity_type, identifier)
+        or identifier
+        for identifier in identifiers
+    }

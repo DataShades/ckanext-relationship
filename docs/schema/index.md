@@ -106,6 +106,22 @@ The preset uses a select-based widget by default.
 - If `multiple` is false and the field is not required, the widget includes a
   `No relation` option.
 
+## Identifier behavior in scheming fields
+
+The shipped relationship widgets submit entity IDs.
+
+If a custom importer or syndication flow injects entity names into a
+scheming-backed relationship field instead:
+
+- the validator first tries to resolve those names to local CKAN IDs
+- if both sides can be resolved, the stored relationship is canonical `id + id`
+- if a target still does not exist locally and
+  `ckanext.relationship.allow_name_based_relation_create = true`, the create or
+  update falls back to a temporary `name + name` row
+- once both local entities exist, later scheming-backed create or update calls
+  rewrite that temporary or legacy `name + name`, `id + name`, or `name + id`
+  row to canonical `id + id`
+
 ## Display behavior
 
 The default display snippet renders related entities as links to their CKAN

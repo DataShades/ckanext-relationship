@@ -22,6 +22,7 @@ dataset_fields:
     related_entity: package
     related_entity_type: package-with-relationship
     relation_type: related_to
+    multiple: true
 
   - field_name: parent_packages
     preset: related_entity

@@ -4,6 +4,7 @@ import uuid
 from typing import Any, cast
 
 import ckan.plugins.toolkit as tk
+from ckan import logic, model
 from ckan.lib.search.query import solr_literal
 from ckan.logic import NotFound
 
@@ -75,7 +76,7 @@ def _entity_by_action(action: str, entity_id: str) -> dict[str, Any] | None:
         return None
 
 
-def _is_uuid(v: str) -> bool:
+def is_uuid(v: str) -> bool:
     """Check if a string is a valid UUID."""
     try:
         uuid.UUID(v)
@@ -85,12 +86,35 @@ def _is_uuid(v: str) -> bool:
         return True
 
 
+def resolve_entity_name_to_id(
+    entity: str | None, entity_type: str | None, entity_name: str
+) -> str | None:
+    """Resolve an entity name into a local CKAN id when possible."""
+    if not entity or is_uuid(entity_name):
+        return entity_name if is_uuid(entity_name) else None
+
+    model_name = "group" if entity == "organization" else entity
+    entity_class = logic.model_name_to_class(model, model_name)
+
+    query = model.Session.query(entity_class.id).filter(
+        entity_class.name == entity_name
+    )
+
+    if hasattr(entity_class, "state"):
+        query = query.filter(entity_class.state != "deleted")
+
+    if entity_type and hasattr(entity_class, "type"):
+        query = query.filter(entity_class.type == entity_type)
+
+    return query.scalar()
+
+
 def build_fq_for_object_ids(objs: list[str]) -> str:
     """Builds a Solr filter query (fq) for a list of object IDs or names."""
     if not objs:
         return "id:__none__"
-    ids = [obj for obj in objs if _is_uuid(obj)]
-    names = [obj.lower() for obj in objs if not _is_uuid(obj)]
+    ids = [obj for obj in objs if is_uuid(obj)]
+    names = [obj.lower() for obj in objs if not is_uuid(obj)]
     parts = []
     if ids:
         parts.append("id:(" + " OR ".join(map(solr_literal, ids)) + ")")

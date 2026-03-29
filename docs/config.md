@@ -100,6 +100,41 @@ ckanext.relationship.redis_queue_name = relationship
 
 ---
 
+## `ckanext.relationship.allow_name_based_relation_create`
+
+Controls whether new relationships may be created with entity names instead of
+CKAN IDs.
+
+| | |
+|---|---|
+| **Type** | `bool` |
+| **Default** | `false` |
+
+Behavior:
+
+- `id + id` creation remains allowed
+- direct calls to `relationship_relation_create` accept `name + name` only when
+  this option is enabled
+- mixed identifier pairs such as `id + name` are always rejected
+- for scheming-backed dataset create and update, relationship fields first try to
+  resolve related entity names into local CKAN IDs
+- if a scheming-backed create or update still cannot resolve both sides and this
+  option is enabled, it falls back to storing a temporary `name + name` pair
+- when a temporary or legacy `name + name`, `id + name`, or `name + id` row
+  becomes fully resolvable later, the same scheming flow canonicalizes it to
+  `id + id`
+
+This is primarily useful for syndication flows where the remote dataset keeps
+the same `name` but receives a different local `id`.
+
+Example:
+
+```ini
+ckanext.relationship.allow_name_based_relation_create = true
+```
+
+---
+
 ## Practical recommendations
 
 - Keep the default `views_without_relationships_in_package_show` unless you
@@ -110,3 +145,5 @@ ckanext.relationship.redis_queue_name = relationship
   slows down create or update requests.
 - Use a dedicated queue name when you want to isolate relationship reindex jobs
   from other CKAN worker traffic.
+- Leave `allow_name_based_relation_create = false` unless you need controlled
+  name-based fallback for syndication or another cross-portal import flow.

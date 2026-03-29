@@ -13,8 +13,8 @@ Parameters:
 
 | Key | Required | Notes |
 |---|---|---|
-| `subject_id` | yes | Use the CKAN ID. Entity names are also accepted in the current implementation |
-| `object_id` | yes | Use the CKAN ID. Entity names are also accepted in the current implementation |
+| `subject_id` | yes | Use the CKAN ID. For direct action calls, `name + name` is allowed only when `ckanext.relationship.allow_name_based_relation_create = true` |
+| `object_id` | yes | Use the CKAN ID. For direct action calls, `name + name` is allowed only when `ckanext.relationship.allow_name_based_relation_create = true` |
 | `relation_type` | yes | `related_to`, `child_of`, or `parent_of` |
 | `extras` | no | Extra metadata stored with the relationship |
 
@@ -22,6 +22,9 @@ Behavior:
 
 - Duplicate relationships are ignored.
 - The reverse relationship is created automatically.
+- Mixed identifier pairs such as `id + name` are rejected.
+- This direct action stores the accepted identifiers as provided; it does not try
+  to resolve `name + name` into `id + id`.
 
 Example:
 
@@ -75,14 +78,24 @@ of `object_id` values.
 
 For predictable results, use CKAN IDs in all relationship actions.
 
-The current implementation also supports some name-based behavior for backward
+The implementation also supports some name-based behavior for backward
 compatibility:
 
-- `relationship_relation_create` accepts entity names as well as IDs
+- `relationship_relation_create` accepts `name + name` only when
+  `ckanext.relationship.allow_name_based_relation_create = true`
+- direct `relationship_relation_create` does not normalize accepted names to IDs
 - `relationship_relation_delete` can remove rows addressed by ID or by name
 - `relationship_relations_list` and `relationship_relations_ids_list` are
   asymmetric: an ID lookup can find rows created by name, but a name lookup
   does not reliably find rows created by ID
+- scheming-backed dataset create and update flows resolve related names to
+  local IDs when possible
+- if scheming-backed create or update cannot resolve both sides and
+  `ckanext.relationship.allow_name_based_relation_create = true`, it can store a
+  temporary `name + name` row
+- the same scheming flow can later rewrite that temporary or legacy
+  `name + name`, `id + name`, or `name + id` row to canonical `id + id` once
+  both local entities exist
 
 ### `relationship_get_entity_list`
 

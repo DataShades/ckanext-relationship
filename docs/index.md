@@ -2,7 +2,7 @@
 
 `ckanext-relationship` adds relationship-backed fields to CKAN datasets and a
 small API for managing those links. It integrates with `ckanext-scheming` and
-can optionally expose a sysadmin dashboard.
+can optionally expose an interactive graph UI and a sysadmin dashboard.
 
 ## Relationship types
 
@@ -18,7 +18,10 @@ The extension supports three relationship types:
 - CKAN actions for creating, deleting, and listing relationships.
 - Default form and display snippets for package, organization, and group links.
 - A package autocomplete widget for large package target lists.
-- An optional `ckanext-tables` dashboard for sysadmins.
+- An optional `relationship_graph` plugin for interactive relationship
+  visualization.
+- An optional `relationship_dashboard` plugin built on `ckanext-tables` for
+  sysadmins.
 
 ## Entity support
 

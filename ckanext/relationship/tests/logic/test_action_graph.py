@@ -5,6 +5,7 @@ from ckan import logic, model
 from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
+from ckanext.relationship.model.relationship import Relationship
 from ckanext.relationship_graph.logic import action as graph_action
 
 
@@ -19,6 +20,29 @@ def _relate(subject_id: str, object_id: str, relation_type: str):
         object_id=object_id,
         relation_type=relation_type,
     )
+
+
+def _insert_legacy_relation(
+    subject_id: str,
+    object_id: str,
+    relation_type: str,
+) -> None:
+    reverse_relation_type = Relationship.reverse_relation_type[relation_type]
+    model.Session.add(
+        Relationship(
+            subject_id=subject_id,
+            object_id=object_id,
+            relation_type=relation_type,
+        )
+    )
+    model.Session.add(
+        Relationship(
+            subject_id=object_id,
+            object_id=subject_id,
+            relation_type=reverse_relation_type,
+        )
+    )
+    model.Session.commit()
 
 
 @pytest.mark.usefixtures("clean_db")
@@ -76,7 +100,7 @@ class TestRelationshipGraphAction:
     def test_unresolved_name_node_is_returned_when_requested(self):
         subject = factories.Dataset(type="package-with-relationship")
 
-        _relate(subject["id"], "remote-dataset-name", "related_to")
+        _insert_legacy_relation(subject["id"], "remote-dataset-name", "related_to")
 
         result = _graph(subject["id"], relation_types=["related_to"])
         unresolved = next(

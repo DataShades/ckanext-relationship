@@ -10,6 +10,9 @@ CONFIG_SHOW_RELATIONSHIP_GRAPH_ON_READ = (
 )
 CONFIG_ASYNC_PACKAGE_INDEX_REBUILD = "ckanext.relationship.async_package_index_rebuild"
 CONFIG_REDIS_QUEUE_NAME = "ckanext.relationship.redis_queue_name"
+CONFIG_ALLOW_NAME_BASED_RELATION_CREATE = (
+    "ckanext.relationship.allow_name_based_relation_create"
+)
 
 
 def views_without_relationships_in_package_show() -> list[str]:
@@ -26,3 +29,7 @@ def async_package_index_rebuild() -> bool:
 
 def redis_queue_name() -> str:
     return tk.config[CONFIG_REDIS_QUEUE_NAME]
+
+
+def allow_name_based_relation_create() -> bool:
+    return tk.config[CONFIG_ALLOW_NAME_BASED_RELATION_CREATE]

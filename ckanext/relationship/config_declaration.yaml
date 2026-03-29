@@ -37,3 +37,15 @@ groups:
         default: "default"
         description: |
             The name of the Redis queue to use for background tasks.
+
+      - key: ckanext.relationship.allow_name_based_relation_create
+        type: bool
+        default: false
+        description: |
+            Controls whether new relationships may be created using entity names
+            instead of CKAN IDs. Direct action calls only allow name-to-name
+            creation when this is enabled, and mixed identifier pairs such as
+            id+name remain invalid. Scheming-backed dataset create and update
+            flows first try to resolve names into local IDs, fall back to
+            temporary name-to-name rows only when needed, and later canonicalize
+            them to id-to-id once both local entities exist.

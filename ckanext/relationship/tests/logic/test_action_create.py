@@ -151,11 +151,27 @@ class TestRelationCreate:
         assert relation_reverse.object_id == subject_id
         assert relation_reverse.relation_type == relation_type
 
-    def test_creation_by_name(self):
-        """We can create a relation by name instead of ID.
+    def test_creation_by_name_is_disabled_by_default(self):
+        subject_dataset = factories.Dataset()
+        object_dataset = factories.Dataset()
 
-        Should be revised in the future to avoid this kind of behavior.
-        """
+        subject_id = subject_dataset["name"]
+        object_id = object_dataset["name"]
+        relation_type = "related_to"
+
+        with pytest.raises(tk.ValidationError):
+            call_action(
+                "relationship_relation_create",
+                {"ignore_auth": True},
+                subject_id=subject_id,
+                object_id=object_id,
+                relation_type=relation_type,
+            )
+
+    @pytest.mark.ckan_config(
+        "ckanext.relationship.allow_name_based_relation_create", True
+    )
+    def test_creation_by_name_when_enabled(self):
         subject_dataset = factories.Dataset()
         object_dataset = factories.Dataset()
 
@@ -179,6 +195,9 @@ class TestRelationCreate:
         assert result[1]["object_id"] == subject_id
         assert result[1]["relation_type"] == relation_type
 
+    @pytest.mark.ckan_config(
+        "ckanext.relationship.allow_name_based_relation_create", True
+    )
     def test_get_by_id_relation_created_by_name(self):
         """We can get a relation by ID if it was created by name."""
         subject_dataset = factories.Dataset()
@@ -234,6 +253,22 @@ class TestRelationCreate:
         )
 
         assert result == []
+
+    @pytest.mark.ckan_config(
+        "ckanext.relationship.allow_name_based_relation_create", True
+    )
+    def test_creation_with_mixed_identifiers_is_rejected(self):
+        subject_dataset = factories.Dataset()
+        object_dataset = factories.Dataset()
+
+        with pytest.raises(tk.ValidationError):
+            call_action(
+                "relationship_relation_create",
+                {"ignore_auth": True},
+                subject_id=subject_dataset["id"],
+                object_id=object_dataset["name"],
+                relation_type="related_to",
+            )
 
     @pytest.mark.parametrize(
         "relation_type",
