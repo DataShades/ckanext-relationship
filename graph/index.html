@@ -781,10 +781,16 @@ organization has at least one relationship.</p>
 <ul>
 <li>datasets, organizations, and groups use different node colors</li>
 <li>node types are shown in the legend with circular color markers</li>
-<li><code>related_to</code> is rendered as a single undirected edge between two nodes</li>
-<li><code>child_of</code> and <code>parent_of</code> are rendered as directed edges</li>
+<li>self-reversing relation types such as <code>related_to</code> are rendered as a single
+  undirected edge between two nodes</li>
+<li>asymmetric relation types such as <code>child_of</code> and <code>parent_of</code> are rendered as
+  directed edges</li>
 <li>relation types are distinguished by color and shown in the legend with line
   markers</li>
+<li>custom relation types can provide their own legend label and edge color via
+  <code>ckanext.relationship.interfaces.IRelationship.get_relationship_type_metadata()</code></li>
+<li>custom relation types without explicit UI metadata use a generic fallback
+  label and edge color</li>
 <li>relation labels are shown on hover, not as permanent edge text</li>
 <li>node labels can be toggled on and off</li>
 <li>the current object is visually highlighted</li>

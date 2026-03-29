@@ -1004,7 +1004,7 @@ relationship field uses a mix of:</p>
 </tr>
 <tr>
 <td><code>relation_type</code></td>
-<td><code>related_to</code>, <code>child_of</code>, or <code>parent_of</code></td>
+<td>One of the configured relationship types</td>
 </tr>
 </tbody>
 </table>
@@ -1137,6 +1137,8 @@ apply because <code>related_entity</code> is a normal scheming field preset.</p>
 </tr>
 </tbody>
 </table>
+<p>These are the built-in types. Other extensions can register additional types by
+implementing <code>ckanext.relationship.interfaces.IRelationship</code>.</p>
 <h2 id="target-entities">Target entities</h2>
 <p><code>related_entity</code> can point to:</p>
 <ul>

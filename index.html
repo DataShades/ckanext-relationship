@@ -627,12 +627,14 @@
 small API for managing those links. It integrates with <code>ckanext-scheming</code> and
 can optionally expose an interactive graph UI and a sysadmin dashboard.</p>
 <h2 id="relationship-types">Relationship types</h2>
-<p>The extension supports three relationship types:</p>
+<p>The extension ships with three built-in relationship types:</p>
 <ul>
 <li><code>related_to</code> creates <code>A related_to B</code> and <code>B related_to A</code></li>
 <li><code>child_of</code> creates <code>A child_of B</code> and <code>B parent_of A</code></li>
 <li><code>parent_of</code> creates <code>A parent_of B</code> and <code>B child_of A</code></li>
 </ul>
+<p>Additional relationship types can be registered by other extensions via
+<code>ckanext.relationship.interfaces.IRelationship</code>.</p>
 <h2 id="what-the-extension-includes">What the extension includes</h2>
 <ul>
 <li>A <code>related_entity</code> scheming preset for relationship fields.</li>

@@ -464,6 +464,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#extending-relationship-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extending relationship types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#relationship_get_entity_list" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -806,6 +817,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#extending-relationship-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extending relationship types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#relationship_get_entity_list" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -987,7 +1009,7 @@ the extension, and its <code>package_show</code> integration.</p>
 <tr>
 <td><code>relation_type</code></td>
 <td>yes</td>
-<td><code>related_to</code>, <code>child_of</code>, or <code>parent_of</code></td>
+<td>One of the configured relationship types. Built-ins are <code>related_to</code>, <code>child_of</code>, and <code>parent_of</code></td>
 </tr>
 <tr>
 <td><code>extras</code></td>
@@ -1078,7 +1100,7 @@ the extension, and its <code>package_show</code> integration.</p>
 <tr>
 <td><code>relation_type</code></td>
 <td>no</td>
-<td><code>related_to</code>, <code>child_of</code>, or <code>parent_of</code></td>
+<td>One of the configured relationship types</td>
 </tr>
 </tbody>
 </table>
@@ -1106,6 +1128,33 @@ compatibility:</p>
   <code>name + name</code>, <code>id + name</code>, or <code>name + id</code> row to canonical <code>id + id</code> once
   both local entities exist</li>
 </ul>
+<h3 id="extending-relationship-types">Extending relationship types</h3>
+<p>Other extensions can register additional relationship types by implementing
+<code>ckanext.relationship.interfaces.IRelationship</code> and returning a mapping of
+<code>relation_type -&gt; reverse_relation_type</code>.</p>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">ckan.plugins</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ckanext.relationship.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IRelationship</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomRelationshipPlugin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">SingletonPlugin</span><span class="p">):</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">IRelationship</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_relationship_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="s2">&quot;required_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;required_by&quot;</span><span class="p">:</span> <span class="s2">&quot;depends_on&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;references&quot;</span><span class="p">:</span> <span class="s2">&quot;references&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_relationship_type_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Depends on&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#7b61ff&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;required_by&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Required by&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#f08c2e&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;references&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;References&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#2a9d8f&quot;</span><span class="p">},</span>
+        <span class="p">}</span>
+</code></pre></div>
 <h3 id="relationship_get_entity_list"><code>relationship_get_entity_list</code></h3>
 <p>Returns entities of a given kind and type.</p>
 <p>Parameters:</p>
