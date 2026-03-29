@@ -1,11 +1,17 @@
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 import ckan.plugins.toolkit as tk
+from ckan import model
 from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
 from ckanext.relationship import relation_types
 from ckanext.relationship.model.relationship import Relationship
+
+
+def _integrity_error():
+    return IntegrityError("", None, Exception())
 
 
 @pytest.mark.usefixtures("clean_db")
@@ -116,6 +122,80 @@ class TestRelationCreate:
         )
 
         assert result == []
+
+    def test_duplicate_integrity_error_returns_empty_result(self, monkeypatch):
+        subject_dataset = factories.Dataset()
+        object_dataset = factories.Dataset()
+
+        subject_id = subject_dataset["id"]
+        object_id = object_dataset["id"]
+        relation_type = "related_to"
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=subject_id,
+            object_id=object_id,
+            relation_type=relation_type,
+        )
+
+        original_by_object_id = Relationship.by_object_id
+        calls = 0
+
+        def fake_by_object_id(cls, subject_id, object_id, relation_type):
+            nonlocal calls
+            calls += 1
+
+            if calls == 1:
+                return None
+
+            return original_by_object_id(subject_id, object_id, relation_type)
+
+        def fail_commit(*args, **kwargs):
+            raise _integrity_error()
+
+        monkeypatch.setattr(
+            Relationship,
+            "by_object_id",
+            classmethod(fake_by_object_id),
+        )
+        monkeypatch.setattr(model.Session, "commit", fail_commit)
+
+        result = call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=subject_id,
+            object_id=object_id,
+            relation_type=relation_type,
+        )
+
+        assert result == []
+
+    def test_non_duplicate_integrity_error_is_not_swallowed(self, monkeypatch):
+        subject_dataset = factories.Dataset()
+        object_dataset = factories.Dataset()
+
+        def fake_by_object_id(cls, subject_id, object_id, relation_type):
+            return None
+
+        def fail_commit(*args, **kwargs):
+            raise _integrity_error()
+
+        monkeypatch.setattr(
+            Relationship,
+            "by_object_id",
+            classmethod(fake_by_object_id),
+        )
+        monkeypatch.setattr(model.Session, "commit", fail_commit)
+
+        with pytest.raises(IntegrityError):
+            call_action(
+                "relationship_relation_create",
+                {"ignore_auth": True},
+                subject_id=subject_dataset["id"],
+                object_id=object_dataset["id"],
+                relation_type="related_to",
+            )
 
     def test_relation_is_added_to_db(self):
         subject_dataset = factories.Dataset()

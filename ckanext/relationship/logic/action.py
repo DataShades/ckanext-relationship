@@ -5,6 +5,7 @@ from typing import Any
 import sqlalchemy as sa
 from flask import jsonify
 from flask.wrappers import Response
+from sqlalchemy.exc import IntegrityError
 
 import ckan.plugins.toolkit as tk
 from ckan import authz, logic
@@ -69,7 +70,16 @@ def relationship_relation_create(
 
     context["session"].add(relation)
     context["session"].add(reverse_relation)
-    context["session"].commit()
+
+    try:
+        context["session"].commit()
+    except IntegrityError:
+        context["session"].rollback()
+
+        if Relationship.by_object_id(subject_id, object_id, relation_type):
+            return []
+
+        raise
 
     return [rel.as_dict() for rel in (relation, reverse_relation)]
 
