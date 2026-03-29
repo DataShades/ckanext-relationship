@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from flask import Blueprint, make_response
+from flask import Blueprint, jsonify, make_response
 
 import ckan.plugins.toolkit as tk
+from ckan import logic
 
 from ckanext.relationship import utils
 
@@ -20,23 +21,43 @@ def get_blueprints():
 relationships = Blueprint("relationships", __name__)
 
 
+def _json_error_response(status_code: int, message: str):
+    return (
+        jsonify(
+            {
+                "success": False,
+                "error": {
+                    "message": message,
+                },
+            }
+        ),
+        status_code,
+    )
+
+
 @relationships.route("/api/2/util/relationships/autocomplete")
 def relationships_autocomplete():
     request_args = tk.request.args
-    return tk.get_action("relationship_autocomplete")(
-        {},
-        {
-            "incomplete": request_args.get("incomplete"),
-            "current_entity_id": request_args.get("current_entity_id"),
-            "entity_type": request_args.get("entity_type", "dataset"),
-            "updatable_only": tk.asbool(request_args.get("updatable_only")),
-            "owned_only": tk.asbool(request_args.get("owned_only")),
-            "check_sysadmin": tk.asbool(request_args.get("check_sysadmin")),
-            "format_autocomplete_helper": request_args.get(
-                "format_autocomplete_helper",
-            ),
-        },
-    )
+    try:
+        return tk.get_action("relationship_autocomplete")(
+            {},
+            {
+                "incomplete": request_args.get("incomplete"),
+                "current_entity_id": request_args.get("current_entity_id"),
+                "entity": request_args.get("entity", "package"),
+                "entity_type": request_args.get("entity_type", "dataset"),
+                "updatable_only": tk.asbool(request_args.get("updatable_only")),
+                "owned_only": tk.asbool(request_args.get("owned_only")),
+                "check_sysadmin": tk.asbool(request_args.get("check_sysadmin")),
+                "format_autocomplete_helper": request_args.get(
+                    "format_autocomplete_helper",
+                ),
+            },
+        )
+    except tk.ValidationError as err:
+        return _json_error_response(400, str(err))
+    except logic.NotAuthorized as err:
+        return _json_error_response(403, str(err))
 
 
 def _search_packages_page(

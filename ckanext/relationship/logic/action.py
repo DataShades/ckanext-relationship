@@ -8,6 +8,7 @@ from flask.wrappers import Response
 
 import ckan.plugins.toolkit as tk
 from ckan import authz, logic
+from ckan.lib.search.query import solr_literal
 from ckan.logic import validate
 from ckan.types import Action, Context
 
@@ -230,16 +231,27 @@ def relationship_get_entity_list(
 @validate(schema.autocomplete)
 def relationship_autocomplete(context: Context, data_dict: dict[str, Any]) -> Response:
     fq = f"type:{data_dict['entity_type']} -id:{data_dict['current_entity_id']}"
+    query = data_dict.get("incomplete", "")
 
     if data_dict.get("owned_only") and not (
         authz.is_sysadmin(tk.current_user.id) and not data_dict.get("check_sysadmin")
     ):
         fq += f" creator_user_id:{tk.current_user.id}"
 
+    if query:
+        query = " OR ".join(
+            [
+                "name_ngram:{0}",
+                "title_ngram:{0}",
+                "name:{0}",
+                "title:{0}",
+            ]
+        ).format(solr_literal(query))
+
     packages = tk.get_action("package_search")(
         {},
         {
-            "q": data_dict.get("incomplete", ""),
+            "q": query,
             "fq": fq,
             "fl": "id, title",
             "rows": 100,

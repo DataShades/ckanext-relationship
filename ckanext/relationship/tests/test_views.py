@@ -37,6 +37,32 @@ class TestRelationshipViews:
             {"name": related["id"], "title": "Related Project"}
         ]
 
+    def test_autocomplete_matches_short_middle_part_of_title(
+        self, app, sysadmin_headers
+    ):
+        current = factories.Dataset(type="package-with-relationship", title="Current")
+        related = factories.Dataset(
+            type="package-with-relationship",
+            title="Public Package",
+        )
+        factories.Dataset(
+            type="dataset",
+            title="Public Decoy",
+        )
+
+        response = app.get(
+            "/api/2/util/relationships/autocomplete"
+            f"?incomplete=bli&current_entity_id={current['id']}"
+            "&entity_type=package-with-relationship",
+            headers=sysadmin_headers,
+            status=200,
+        )
+        payload = json.loads(response.body)
+
+        assert payload["ResultSet"]["Result"] == [
+            {"name": related["id"], "title": "Public Package"}
+        ]
+
     def test_autocomplete_check_sysadmin_controls_owned_only(
         self,
         app,
@@ -85,6 +111,23 @@ class TestRelationshipViews:
 
         assert unrestricted_ids == {owned["id"], foreign["id"]}
         assert restricted_ids == {owned["id"]}
+
+    def test_autocomplete_rejects_non_package_entity(self, app, sysadmin_headers):
+        current = factories.Dataset(type="package-with-relationship")
+
+        response = app.get(
+            "/api/2/util/relationships/autocomplete"
+            f"?current_entity_id={current['id']}"
+            "&entity=organization"
+            "&entity_type=organization",
+            headers=sysadmin_headers,
+            expect_errors=True,
+        )
+
+        body = _response_text(response)
+
+        assert response.status_code >= 400
+        assert "package" in body
 
     def test_related_batch_returns_204_without_related_packages(self, app):
         subject = factories.Dataset(type="package-with-relationship")

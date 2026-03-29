@@ -50,6 +50,7 @@ this.ckan.module('relationship-autocomplete', function (jQuery) {
          */
         setupAutoComplete: function () {
             var settings = {
+                width: '100%',
                 formatResult: this.formatResult,
                 formatNoMatches: this.formatNoMatches,
                 formatInputTooShort: this.formatInputTooShort,
@@ -206,7 +207,11 @@ this.ckan.module('relationship-autocomplete', function (jQuery) {
          * Returns a text string.
          */
         formatNoMatches: function (term) {
-            return !term ? this._('Start typing…') : this._('No matches found');
+            if (!term) {
+                return this._('Start typing…');
+            }
+
+            return term.length < 3 ? this._('Searching…') : this._('No matches found');
         },
 
         /* Formatter used by the select2 plugin that returns a string when the
@@ -256,6 +261,9 @@ this.ckan.module('relationship-autocomplete', function (jQuery) {
 
             formatted = client.parseCompletions(data, jQuery.extend(this.options, {objects: true}))
 
+            if (!this.options.tags) {
+                formatted = jQuery.isArray(formatted) ? (formatted[0] || null) : formatted;
+            }
 
             // Select2 v3.0 supports a callback for async calls.
             if (typeof callback === 'function') {

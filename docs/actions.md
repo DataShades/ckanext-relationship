@@ -153,6 +153,7 @@ Parameters:
 | Key | Required |
 |---|---|
 | `current_entity_id` | yes |
+| `entity` | no, defaults to `package`; only `package` is supported |
 | `entity_type` | yes |
 | `incomplete` | no |
 | `updatable_only` | no |
@@ -222,6 +223,7 @@ Purpose:
 
 - Frontend endpoint for the package autocomplete widget.
 - Useful for custom frontends that want the same search behavior.
+- `entity=package` is the only supported mode.
 
 ### `/api/2/util/relationships/graph`
 

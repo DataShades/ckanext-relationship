@@ -144,6 +144,10 @@ widget.
 The autocomplete widget is package-only. Do not use it for organization or
 group relations.
 
+If this snippet is configured on a non-package relationship field, the
+extension falls back to the default select widget instead of using the
+package-only autocomplete endpoint.
+
 ### Example field
 
 ```yaml
@@ -202,6 +206,7 @@ parameters are:
 |---|---|
 | `incomplete` | Search string typed by the user |
 | `current_entity_id` | Current package ID, excluded from results |
+| `entity` | Must be `package` |
 | `entity_type` | Package type to search |
 | `updatable_only` | If true, keep only packages the current user can update |
 | `owned_only` | If true, keep only packages created by the current user |

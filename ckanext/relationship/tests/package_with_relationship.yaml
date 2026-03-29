@@ -17,6 +17,7 @@ dataset_fields:
 
   - field_name: related_packages
     preset: related_entity
+    form_snippet: related_entity_with_autocomplete.html
     label: Related Packages
     validators: relationship_related_entity
     related_entity: package

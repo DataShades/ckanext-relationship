@@ -35,14 +35,13 @@ class CanonicalRelationRule(NamedTuple):
 def _canonical_relation_rules() -> dict[str, CanonicalRelationRule]:
     rules: dict[str, CanonicalRelationRule] = {}
 
-    for relation_type, reverse_relation_type in (
-        relation_types.get_relation_type_reverse_map().items()
-    ):
+    for (
+        relation_type,
+        reverse_relation_type,
+    ) in relation_types.get_relation_type_reverse_map().items():
         symmetric = relation_type == reverse_relation_type
         canonical_relation_type = (
-            relation_type
-            if symmetric
-            else max(relation_type, reverse_relation_type)
+            relation_type if symmetric else max(relation_type, reverse_relation_type)
         )
         rules[relation_type] = CanonicalRelationRule(
             canonical_relation_type=canonical_relation_type,

@@ -20,11 +20,14 @@ Returns the currently selected related IDs for a field.
 
 Use it to pre-populate a custom form or display snippet.
 
-### `relationship_get_selected_json(selected_ids=None)`
+### `relationship_get_selected_json(selected_ids=None, entity="package")`
 
 Returns the JSON payload used to pre-populate the autocomplete widget.
 
 This helper is intended for package autocomplete fields.
+
+If `entity != "package"`, it returns an empty payload instead of trying to
+pre-populate unsupported organization or group autocomplete widgets.
 
 ### `relationship_get_choices_for_related_entity_field(field, current_entity_id)`
 
@@ -104,6 +107,10 @@ Use it when:
 
 - the related package list is large
 - preloading up to 1000 choices is not practical
+
+If this snippet is accidentally used for organization or group relations, it
+falls back to the default select widget instead of calling the package-only
+autocomplete endpoint.
 
 See [Package autocomplete](schema/index.md#package-autocomplete) for the full
 details.

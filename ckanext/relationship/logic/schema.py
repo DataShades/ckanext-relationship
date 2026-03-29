@@ -104,11 +104,19 @@ def get_entity_list(not_empty: Validator, one_of: ValidatorFactory) -> Schema:
 
 
 @validator_args
-def autocomplete(not_empty: Validator) -> Schema:
+def autocomplete(
+    not_empty: Validator,
+    default: ValidatorFactory,
+    one_of: ValidatorFactory,
+) -> Schema:
     return {
         "incomplete": [],
         "current_entity_id": [
             not_empty,
+        ],
+        "entity": [
+            default("package"),
+            one_of(["package"]),
         ],
         "entity_type": [
             not_empty,

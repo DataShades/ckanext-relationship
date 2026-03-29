@@ -5,7 +5,12 @@
 
 {% set selected = h.relationship_get_current_relations_list(field, data) %}
 {% if not selected %}
-  {% set selected = request.args[field.field_name] %}
+  {% set selected = request.args.get(field.field_name) %}
+{% endif %}
+{% if not selected %}
+  {% set selected = [] %}
+{% elif selected is string %}
+  {% set selected = [selected] %}
 {% endif %}
 
 {% set classes = ['control-full'] %}

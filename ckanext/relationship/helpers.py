@@ -97,8 +97,10 @@ def relationship_get_current_relations_list(
     return current_relation_by_id + current_relation_by_name
 
 
-def relationship_get_selected_json(selected_ids: list[str] | None = None) -> str:
-    if not selected_ids:
+def relationship_get_selected_json(
+    selected_ids: list[str] | None = None, entity: str = "package"
+) -> str:
+    if entity != "package" or not selected_ids:
         return json.dumps([])
 
     selected_pkgs = []
