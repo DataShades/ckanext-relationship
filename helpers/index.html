@@ -458,10 +458,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relationship_get_selected_jsonselected_idsnone" class="md-nav__link">
+  <a href="#relationship_get_selected_jsonselected_idsnone-entitypackage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        relationship_get_selected_json(selected_ids=None)
+        relationship_get_selected_json(selected_ids=None, entity="package")
       
     </span>
   </a>
@@ -866,10 +866,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relationship_get_selected_jsonselected_idsnone" class="md-nav__link">
+  <a href="#relationship_get_selected_jsonselected_idsnone-entitypackage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        relationship_get_selected_json(selected_ids=None)
+        relationship_get_selected_json(selected_ids=None, entity="package")
       
     </span>
   </a>
@@ -1156,9 +1156,11 @@ logic as the default field.</p>
 <h3 id="relationship_get_current_relations_listfield-data"><code>relationship_get_current_relations_list(field, data)</code></h3>
 <p>Returns the currently selected related IDs for a field.</p>
 <p>Use it to pre-populate a custom form or display snippet.</p>
-<h3 id="relationship_get_selected_jsonselected_idsnone"><code>relationship_get_selected_json(selected_ids=None)</code></h3>
+<h3 id="relationship_get_selected_jsonselected_idsnone-entitypackage"><code>relationship_get_selected_json(selected_ids=None, entity="package")</code></h3>
 <p>Returns the JSON payload used to pre-populate the autocomplete widget.</p>
 <p>This helper is intended for package autocomplete fields.</p>
+<p>If <code>entity != "package"</code>, it returns an empty payload instead of trying to
+pre-populate unsupported organization or group autocomplete widgets.</p>
 <h3 id="relationship_get_choices_for_related_entity_fieldfield-current_entity_id"><code>relationship_get_choices_for_related_entity_field(field, current_entity_id)</code></h3>
 <p>Builds the <code>(value, label)</code> pairs for the default select widget.</p>
 <p>Use it when you want the same option list as the default relationship widget.</p>
@@ -1210,6 +1212,9 @@ least one stored relationship row.</p>
 <li>the related package list is large</li>
 <li>preloading up to 1000 choices is not practical</li>
 </ul>
+<p>If this snippet is accidentally used for organization or group relations, it
+falls back to the default select widget instead of calling the package-only
+autocomplete endpoint.</p>
 <p>See <a href="../schema/#package-autocomplete">Package autocomplete</a> for the full
 details.</p>
 <h3 id="schemingdisplay_snippetsrelated_entityhtml"><code>scheming/display_snippets/related_entity.html</code></h3>

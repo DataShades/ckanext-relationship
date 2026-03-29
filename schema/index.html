@@ -1189,6 +1189,9 @@ package relationship field has too many possible targets for the default select
 widget.</p>
 <p>The autocomplete widget is package-only. Do not use it for organization or
 group relations.</p>
+<p>If this snippet is configured on a non-package relationship field, the
+extension falls back to the default select widget instead of using the
+package-only autocomplete endpoint.</p>
 <h3 id="example-field">Example field</h3>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">field_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">related_projects</span>
 <span class="w">  </span><span class="nt">preset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">related_entity</span>
@@ -1269,6 +1272,10 @@ parameters are:</p>
 <tr>
 <td><code>current_entity_id</code></td>
 <td>Current package ID, excluded from results</td>
+</tr>
+<tr>
+<td><code>entity</code></td>
+<td>Must be <code>package</code></td>
 </tr>
 <tr>
 <td><code>entity_type</code></td>
