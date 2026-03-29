@@ -28,7 +28,11 @@ def test_relationship_graph_plugin_registers_optional_graph_features():
     assert p.plugin_loaded("relationship_graph")
     assert "relationship_graph" in plugin.get_actions()
     assert "relationship_get_relation_types" in plugin.get_helpers()
+    assert "relationship_has_existing_relations" in plugin.get_helpers()
+    assert "relationship_show_graph_on_dataset_read" in plugin.get_helpers()
     assert "relationship_show_graph_on_read" in plugin.get_helpers()
+    assert "relationship_show_graph_on_group_about" in plugin.get_helpers()
+    assert "relationship_show_graph_on_organization_about" in plugin.get_helpers()
     helper = plugin.get_helpers()["relationship_get_relation_types"]
     assert set(helper("package-with-relationship")) == {
         "related_to",

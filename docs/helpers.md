@@ -51,10 +51,29 @@ fields.
 
 Returns the distinct relationship types configured for the given dataset type.
 
-### `relationship_show_graph_on_read()`
+### `relationship_show_graph_on_dataset_read()`
 
 Returns whether the graph section should be added automatically to dataset read
 pages.
+
+### `relationship_show_graph_on_read()`
+
+Backward-compatible alias for `relationship_show_graph_on_dataset_read()`.
+
+### `relationship_show_graph_on_group_about()`
+
+Returns whether the graph section should be added automatically to group About
+pages.
+
+### `relationship_show_graph_on_organization_about()`
+
+Returns whether the graph section should be added automatically to organization
+About pages.
+
+### `relationship_has_existing_relations(subject_id)`
+
+Returns `True` when the given dataset, organization, or group already has at
+least one stored relationship row.
 
 ## Scheming snippets
 

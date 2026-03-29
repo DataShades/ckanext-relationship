@@ -4,6 +4,9 @@
 
 .relationship-graph-snippet {
   --relationship-graph-node-color: #3f7f8c;
+  --relationship-graph-package-node-color: #4a88b5;
+  --relationship-graph-organization-node-color: #cf6f3e;
+  --relationship-graph-group-node-color: #4b9b6f;
   --relationship-graph-node-level-1-color: #5d9aa5;
   --relationship-graph-node-level-2-color: #8bb8bf;
   --relationship-graph-node-level-3-color: #afccd1;
@@ -136,6 +139,12 @@
   text-transform: uppercase;
 }
 
+.relationship-graph__legend-section + .relationship-graph__legend-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(215, 221, 226, 0.95);
+}
+
 .relationship-graph__legend-item {
   display: flex;
   align-items: center;
@@ -152,6 +161,14 @@
   width: 12px;
   height: 12px;
   border-radius: 999px;
+  box-shadow: 0 2px 4px rgba(21, 50, 58, 0.12);
+  flex: 0 0 auto;
+}
+
+.relationship-graph__legend-line {
+  width: 18px;
+  height: 0;
+  border-top: 3px solid transparent;
   flex: 0 0 auto;
 }
 

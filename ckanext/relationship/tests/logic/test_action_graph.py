@@ -144,6 +144,40 @@ class TestRelationshipGraphAction:
         assert gamma["id"] not in node_ids
         assert {edge["relation_type"] for edge in result["edges"]} == {"related_to"}
 
+    def test_package_graph_payload_includes_organization_nodes(self):
+        dataset = factories.Dataset(type="package-with-relationship")
+        organization = factories.Organization(title="Open Data Team")
+
+        _relate(dataset["id"], organization["id"], "child_of")
+
+        result = _graph(dataset["id"], depth=1)
+        organization_node = next(
+            node for node in result["nodes"] if node["entity_id"] == organization["id"]
+        )
+
+        assert organization_node["entity"] == "organization"
+        assert organization_node["entity_type"] == "organization"
+        assert organization_node["name"] == organization["name"]
+        assert organization_node["title"] == organization["title"]
+        assert organization_node["url"] == f"/organization/{organization['name']}"
+
+    def test_package_graph_payload_includes_group_nodes(self):
+        dataset = factories.Dataset(type="package-with-relationship")
+        group = factories.Group(title="Research Cluster")
+
+        _relate(dataset["id"], group["id"], "related_to")
+
+        result = _graph(dataset["id"], depth=1)
+        group_node = next(
+            node for node in result["nodes"] if node["entity_id"] == group["id"]
+        )
+
+        assert group_node["entity"] == "group"
+        assert group_node["entity_type"] == "group"
+        assert group_node["name"] == group["name"]
+        assert group_node["title"] == group["title"]
+        assert group_node["url"] == f"/group/{group['name']}"
+
     def test_empty_graph_returns_only_center_node(self):
         subject = factories.Dataset(type="package-with-relationship")
 

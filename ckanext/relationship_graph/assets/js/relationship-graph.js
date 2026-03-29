@@ -195,6 +195,18 @@ this.ckan.module("relationship-graph", function ($) {
     _readTheme: function () {
       return {
         nodeColor: this._cssVar("--relationship-graph-node-color", "#3f7f8c"),
+        packageNodeColor: this._cssVar(
+          "--relationship-graph-package-node-color",
+          "#4a88b5"
+        ),
+        organizationNodeColor: this._cssVar(
+          "--relationship-graph-organization-node-color",
+          "#cf6f3e"
+        ),
+        groupNodeColor: this._cssVar(
+          "--relationship-graph-group-node-color",
+          "#4b9b6f"
+        ),
         nodeBorderColor: this._cssVar(
           "--relationship-graph-node-border-color",
           "#ffffff"
@@ -304,28 +316,43 @@ this.ckan.module("relationship-graph", function ($) {
       };
     },
 
-    _nodeColorForLevel: function (level) {
-      var currentLevel = typeof level === "number" ? level : parseInt(level, 10);
-      var color = "";
+    _entityDefinitions: function () {
+      var theme = this.theme || this._readTheme();
 
-      if (Number.isNaN(currentLevel) || currentLevel <= 0) {
-        return this.theme.nodeColor;
-      }
-
-      while (currentLevel > 0) {
-        color = this._cssVar(
-          "--relationship-graph-node-level-" + currentLevel + "-color",
-          ""
-        );
-
-        if (color) {
-          return color;
+      return {
+        package: {
+          color: theme.packageNodeColor,
+          label: this._("Dataset")
+        },
+        organization: {
+          color: theme.organizationNodeColor,
+          label: this._("Organization")
+        },
+        group: {
+          color: theme.groupNodeColor,
+          label: this._("Group")
         }
+      };
+    },
 
-        currentLevel -= 1;
+    _entityInfo: function (entity) {
+      var definitions = this._entityDefinitions();
+
+      if (definitions[entity]) {
+        return definitions[entity];
       }
 
-      return this.theme.nodeColor;
+      return {
+        color: (this.theme || this._readTheme()).nodeColor,
+        label: entity || this._("Item")
+      };
+    },
+
+    _entityOrder: function (entity) {
+      var order = ["package", "organization", "group"];
+      var index = $.inArray(entity, order);
+
+      return index === -1 ? order.length : index;
     },
 
     _relationDefinitions: function () {
@@ -368,23 +395,40 @@ this.ckan.module("relationship-graph", function ($) {
     },
 
     _nodeTooltipText: function (node) {
+      var entity = this._entityInfo(node.data("entity"));
       var title = node.data("title") || node.data("name") || node.id();
 
       if (node.data("is_center")) {
-        return this._("Current dataset: %(title)s", {
+        return this._("Current item: %(title)s", {
           title: title
         });
       }
 
-      return title;
+      return this._("%(entity)s: %(title)s", {
+        entity: entity.label,
+        title: title
+      });
     },
 
-    _renderLegend: function (edges) {
+    _renderLegend: function (nodes, edges) {
       var module = this;
+      var seenEntities = {};
       var seen = {};
+      var entities = [];
       var relationTypes = [];
 
       this.legend.empty();
+
+      $.each(nodes, function (_, node) {
+        var entity = node.entity;
+
+        if (!entity || !node.resolved || seenEntities[entity]) {
+          return;
+        }
+
+        seenEntities[entity] = true;
+        entities.push(entity);
+      });
 
       $.each(edges, function (_, edge) {
         if (seen[edge.relation_type]) {
@@ -399,37 +443,84 @@ this.ckan.module("relationship-graph", function ($) {
         return module._relationOrder(left) - module._relationOrder(right);
       });
 
-      if (!relationTypes.length) {
+      entities.sort(function (left, right) {
+        return module._entityOrder(left) - module._entityOrder(right);
+      });
+
+      if (!entities.length && !relationTypes.length) {
         this.legend.hide();
         return;
       }
 
-      this.legend.append(
-        $("<div />", {
-          class: "relationship-graph__legend-title",
-          text: this._("Relation types")
-        })
-      );
-
-      $.each(relationTypes, function (_, relationType) {
-        var relation = module._relationInfo(relationType);
-        var item = $("<div />", {
-          class: "relationship-graph__legend-item"
+      if (entities.length) {
+        var entitySection = $("<div />", {
+          class: "relationship-graph__legend-section"
         });
 
-        item.append(
-          $("<span />", {
-            class: "relationship-graph__legend-swatch"
-          }).css("background-color", relation.color)
-        );
-        item.append(
-          $("<span />", {
-            text: relation.label
+        entitySection.append(
+          $("<div />", {
+            class: "relationship-graph__legend-title",
+            text: this._("Node types")
           })
         );
 
-        module.legend.append(item);
-      });
+        $.each(entities, function (_, entityName) {
+          var entity = module._entityInfo(entityName);
+          var item = $("<div />", {
+            class: "relationship-graph__legend-item"
+          });
+
+          item.append(
+            $("<span />", {
+              class: "relationship-graph__legend-swatch"
+            }).css("background-color", entity.color)
+          );
+          item.append(
+            $("<span />", {
+              text: entity.label
+            })
+          );
+
+          entitySection.append(item);
+        });
+
+        this.legend.append(entitySection);
+      }
+
+      if (relationTypes.length) {
+        var relationSection = $("<div />", {
+          class: "relationship-graph__legend-section"
+        });
+
+        relationSection.append(
+          $("<div />", {
+            class: "relationship-graph__legend-title",
+            text: this._("Relation types")
+          })
+        );
+
+        $.each(relationTypes, function (_, relationType) {
+          var relation = module._relationInfo(relationType);
+          var item = $("<div />", {
+            class: "relationship-graph__legend-item"
+          });
+
+          item.append(
+            $("<span />", {
+              class: "relationship-graph__legend-line"
+            }).css("border-color", relation.color)
+          );
+          item.append(
+            $("<span />", {
+              text: relation.label
+            })
+          );
+
+          relationSection.append(item);
+        });
+
+        this.legend.append(relationSection);
+      }
 
       this.legend.show();
     },
@@ -542,9 +633,12 @@ this.ckan.module("relationship-graph", function ($) {
         elements: []
           .concat(
             $.map(nodes, function (node) {
+              var entity = module._entityInfo(node.entity);
+
               return {
                 data: $.extend({}, node, {
-                  node_color: module._nodeColorForLevel(node.level)
+                  entity_color: entity.color,
+                  entity_label: entity.label
                 })
               };
             })
@@ -566,7 +660,7 @@ this.ckan.module("relationship-graph", function ($) {
             selector: "node",
             style: {
               label: "",
-              "background-color": "data(node_color)",
+              "background-color": "data(entity_color)",
               color: this.theme.nodeLabelColor,
               "font-size": this.theme.nodeLabelFontSize,
               "font-weight": 600,
@@ -583,7 +677,6 @@ this.ckan.module("relationship-graph", function ($) {
           {
             selector: "node[?is_center]",
             style: {
-              "background-color": this.theme.centerNodeColor,
               "border-width": this.theme.centerNodeBorderWidth,
               "border-color": this.theme.centerNodeBorderColor,
               "underlay-color": this.theme.centerNodeHaloColor,
@@ -703,7 +796,7 @@ this.ckan.module("relationship-graph", function ($) {
 
       this._setDownloadEnabled(true);
       this._applyNodeLabelVisibility();
-      this._renderLegend(edges);
+      this._renderLegend(nodes, edges);
 
       if (!edges.length) {
         this._setStatus(this._("No relationships found."), "empty");

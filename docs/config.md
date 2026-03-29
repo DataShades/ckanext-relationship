@@ -2,7 +2,7 @@
 
 All configuration options are prefixed with `ckanext.relationship.`.
 
-## `ckanext.relationship.show_relationship_graph_on_read`
+## `ckanext.relationship.show_relationship_graph_on_dataset_read`
 
 Controls whether the optional relationship graph section is automatically added
 to dataset read pages when the `relationship_graph` plugin is enabled.
@@ -20,7 +20,55 @@ Default effect:
 Example:
 
 ```ini
-ckanext.relationship.show_relationship_graph_on_read = false
+ckanext.relationship.show_relationship_graph_on_dataset_read = false
+```
+
+---
+
+## `ckanext.relationship.show_relationship_graph_on_group_about`
+
+Controls whether the optional relationship graph section is automatically added
+to group About pages when the `relationship_graph` plugin is enabled.
+
+| | |
+|---|---|
+| **Type** | `bool` |
+| **Default** | `true` |
+
+Default effect:
+
+- group About pages render the graph section automatically when the current
+  group has at least one relationship
+- manual use of `relationship_graph/snippets/graph.html` is still available
+
+Example:
+
+```ini
+ckanext.relationship.show_relationship_graph_on_group_about = false
+```
+
+---
+
+## `ckanext.relationship.show_relationship_graph_on_organization_about`
+
+Controls whether the optional relationship graph section is automatically added
+to organization About pages when the `relationship_graph` plugin is enabled.
+
+| | |
+|---|---|
+| **Type** | `bool` |
+| **Default** | `true` |
+
+Default effect:
+
+- organization About pages render the graph section automatically when the
+  current organization has at least one relationship
+- manual use of `relationship_graph/snippets/graph.html` is still available
+
+Example:
+
+```ini
+ckanext.relationship.show_relationship_graph_on_organization_about = false
 ```
 
 ---
@@ -139,8 +187,13 @@ ckanext.relationship.allow_name_based_relation_create = true
 
 - Keep the default `views_without_relationships_in_package_show` unless you
   explicitly need relationship values on search or read pages.
-- Keep `show_relationship_graph_on_read = true` unless you want to place the
-  graph manually in custom templates or disable it on read pages entirely.
+- Keep `show_relationship_graph_on_dataset_read = true` unless you want to
+  place the graph manually in custom templates or disable it on dataset pages
+  entirely.
+- Keep `show_relationship_graph_on_group_about = true` unless you want to
+  disable automatic graph placement on group About pages.
+- Keep `show_relationship_graph_on_organization_about = true` unless you want
+  to disable automatic graph placement on organization About pages.
 - Turn on async index rebuilds on larger sites where synchronous reindexing
   slows down create or update requests.
 - Use a dedicated queue name when you want to isolate relationship reindex jobs

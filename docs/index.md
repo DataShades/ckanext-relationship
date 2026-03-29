@@ -19,7 +19,7 @@ The extension supports three relationship types:
 - Default form and display snippets for package, organization, and group links.
 - A package autocomplete widget for large package target lists.
 - An optional `relationship_graph` plugin for interactive relationship
-  visualization.
+  visualization across datasets, organizations, and groups.
 - An optional `relationship_dashboard` plugin built on `ckanext-tables` for
   sysadmins.
 
@@ -30,4 +30,12 @@ The extension supports three relationship types:
 | Default relationship field | yes | yes | yes |
 | Read-page links | yes | yes | yes |
 | Autocomplete widget | yes | no | no |
+| Graph action and graph snippet | yes | yes | yes |
+| Automatic graph section | yes | yes | yes |
 | Admin dashboard | yes | yes | yes |
+
+Automatic graph placement is controlled separately for each object page type:
+
+- datasets: `ckanext.relationship.show_relationship_graph_on_dataset_read`
+- organizations: `ckanext.relationship.show_relationship_graph_on_organization_about`
+- groups: `ckanext.relationship.show_relationship_graph_on_group_about`

@@ -3,7 +3,7 @@
 {% block package_additional_info %}
   {{ super() }}
 
-  {% if h.relationship_show_graph_on_read() and h.relationship_has_relations(pkg.type) %}
+  {% if h.relationship_show_graph_on_dataset_read() and h.relationship_has_relations(pkg.type) %}
     <h3>{{ _('Relationship graph') }}</h3>
     <section class="module module-narrow relationship-graph-section">
       <div class="module-content">

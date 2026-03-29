@@ -13,7 +13,7 @@ groups:
           page. To include relationships in the package_show action, you must add the
           flag with_relationships=True to the data_dict.
 
-      - key: ckanext.relationship.show_relationship_graph_on_read
+      - key: ckanext.relationship.show_relationship_graph_on_dataset_read
         type: bool
         default: true
         description: |
@@ -21,6 +21,26 @@ groups:
           automatically to dataset read pages when the relationship_graph plugin
           is enabled. Manual use of the graph snippet in custom templates is not
           affected.
+
+      - key: ckanext.relationship.show_relationship_graph_on_group_about
+        type: bool
+        default: true
+        description: |
+          Controls whether the optional relationship graph section is added
+          automatically to group About pages when the relationship_graph plugin
+          is enabled. The section is rendered only when the current group has at
+          least one relationship. Manual use of the graph snippet in custom
+          templates is not affected.
+
+      - key: ckanext.relationship.show_relationship_graph_on_organization_about
+        type: bool
+        default: true
+        description: |
+          Controls whether the optional relationship graph section is added
+          automatically to organization About pages when the
+          relationship_graph plugin is enabled. The section is rendered only
+          when the current organization has at least one relationship.
+          Manual use of the graph snippet in custom templates is not affected.
 
       - key: ckanext.relationship.async_package_index_rebuild
         type: bool

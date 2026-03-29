@@ -139,7 +139,9 @@ class TestRelationshipGraphTemplates:
 @pytest.mark.ckan_config(
     "ckan.plugins", "relationship relationship_graph scheming_datasets"
 )
-@pytest.mark.ckan_config("ckanext.relationship.show_relationship_graph_on_read", False)
+@pytest.mark.ckan_config(
+    "ckanext.relationship.show_relationship_graph_on_dataset_read", False
+)
 @pytest.mark.usefixtures("with_plugins", "clean_db")
 class TestRelationshipGraphReadPageConfig:
     def test_dataset_page_does_not_render_graph_when_disabled_by_config(self, app):

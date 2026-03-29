@@ -2,6 +2,7 @@ import json
 
 import pytest
 
+from ckan.lib.helpers import url_for
 from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
@@ -128,3 +129,94 @@ class TestRelationshipViews:
         assert "/relationship/section" in body
         assert "start=1" in body
         assert "size=1" in body
+
+
+@pytest.mark.ckan_config(
+    "ckan.plugins",
+    "relationship relationship_graph scheming_datasets",
+)
+@pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index")
+class TestRelationshipGraphReadViews:
+    def test_organization_about_renders_graph_snippet_by_default(self, app):
+        organization = factories.Organization()
+        dataset = factories.Dataset(type="package-with-relationship")
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=dataset["id"],
+            object_id=organization["id"],
+            relation_type="child_of",
+        )
+
+        response = app.get(
+            url_for("organization.about", id=organization["name"]),
+            status=200,
+        )
+        body = _response_text(response)
+
+        assert "relationship-graph-snippet" in body
+        assert f'data-object-id="{organization["id"]}"' in body
+        assert 'data-object-entity="organization"' in body
+
+    def test_group_about_renders_graph_snippet_by_default(self, app):
+        group = factories.Group()
+        dataset = factories.Dataset(type="package-with-relationship")
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=dataset["id"],
+            object_id=group["id"],
+            relation_type="related_to",
+        )
+
+        response = app.get(
+            url_for("group.about", id=group["name"]),
+            status=200,
+        )
+        body = _response_text(response)
+
+        assert "relationship-graph-snippet" in body
+        assert f'data-object-id="{group["id"]}"' in body
+        assert 'data-object-entity="group"' in body
+
+    @pytest.mark.ckan_config(
+        "ckanext.relationship.show_relationship_graph_on_group_about",
+        "false",
+    )
+    @pytest.mark.ckan_config(
+        "ckanext.relationship.show_relationship_graph_on_organization_about",
+        "false",
+    )
+    def test_about_pages_hide_graph_snippet_when_disabled(self, app):
+        organization = factories.Organization()
+        group = factories.Group()
+        dataset = factories.Dataset(type="package-with-relationship")
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=dataset["id"],
+            object_id=organization["id"],
+            relation_type="child_of",
+        )
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=dataset["id"],
+            object_id=group["id"],
+            relation_type="related_to",
+        )
+
+        organization_response = app.get(
+            url_for("organization.about", id=organization["name"]),
+            status=200,
+        )
+        group_response = app.get(
+            url_for("group.about", id=group["name"]),
+            status=200,
+        )
+
+        assert "relationship-graph-snippet" not in _response_text(organization_response)
+        assert "relationship-graph-snippet" not in _response_text(group_response)

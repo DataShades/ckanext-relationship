@@ -78,9 +78,7 @@ def _validate_relation_identifiers(subject_id: str, object_id: str) -> None:
     object_uses_id = utils.is_uuid(object_id)
 
     if subject_uses_id != object_uses_id:
-        message = tk._(
-            "subject_id and object_id must both use ids or both use names"
-        )
+        message = tk._("subject_id and object_id must both use ids or both use names")
         raise tk.ValidationError(
             {
                 "subject_id": [message],

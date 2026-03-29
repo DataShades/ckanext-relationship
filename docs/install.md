@@ -53,6 +53,16 @@ If you want the graph snippet on scheming dataset pages, keep
 ckan.plugins = ... relationship relationship_graph scheming_datasets ...
 ```
 
+With `relationship_graph` enabled:
+
+- dataset read pages show the graph automatically by default
+- group About pages show it automatically by default when the current group has
+  at least one relationship
+- organization About pages show it automatically by default when the current
+  organization has at least one relationship
+
+See [Configuration](config.md) and [Graph](graph.md) for the exact behavior.
+
 For the optional dashboard, also enable `tables` and
 `relationship_dashboard`:
 

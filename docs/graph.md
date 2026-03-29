@@ -16,14 +16,24 @@ If you want the graph snippet to appear on scheming dataset pages, keep
 
 ## Where it appears
 
+The graph can always be embedded manually with the reusable snippet.
+
 When the plugin is enabled and the dataset type has relationship-backed fields,
-the graph is rendered as a separate section on the dataset page.
+the graph can also be rendered automatically as a separate section on the
+dataset page.
 
 It is not rendered inside the `additional_info` metadata table.
 
 Automatic insertion on dataset read pages is controlled by
-`ckanext.relationship.show_relationship_graph_on_read`, which defaults to
+`ckanext.relationship.show_relationship_graph_on_dataset_read`, which defaults to
 `true`.
+
+Automatic insertion on group About pages is controlled by
+`ckanext.relationship.show_relationship_graph_on_group_about`, which defaults to
+`true`. Automatic insertion on organization About pages is controlled by
+`ckanext.relationship.show_relationship_graph_on_organization_about`, which
+also defaults to `true`. The section is shown only if the current group or
+organization has at least one relationship.
 
 ![Relationship graph snippet](image/relationships_graph.png)
 
@@ -64,12 +74,15 @@ Supported parameters:
 
 ## Visualization behavior
 
+- datasets, organizations, and groups use different node colors
+- node types are shown in the legend with circular color markers
 - `related_to` is rendered as a single undirected edge between two nodes
 - `child_of` and `parent_of` are rendered as directed edges
-- relation types are distinguished by color and shown in the legend
+- relation types are distinguished by color and shown in the legend with line
+  markers
 - relation labels are shown on hover, not as permanent edge text
 - node labels can be toggled on and off
-- the current dataset is visually highlighted
+- the current object is visually highlighted
 
 ## Controls
 
