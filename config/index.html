@@ -503,10 +503,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ckanextrelationshipshow_relationship_graph_on_read" class="md-nav__link">
+  <a href="#ckanextrelationshipshow_relationship_graph_on_dataset_read" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ckanext.relationship.show_relationship_graph_on_read
+        ckanext.relationship.show_relationship_graph_on_dataset_read
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ckanextrelationshipshow_relationship_graph_on_group_about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ckanext.relationship.show_relationship_graph_on_group_about
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ckanextrelationshipshow_relationship_graph_on_organization_about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ckanext.relationship.show_relationship_graph_on_organization_about
       
     </span>
   </a>
@@ -603,10 +625,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ckanextrelationshipshow_relationship_graph_on_read" class="md-nav__link">
+  <a href="#ckanextrelationshipshow_relationship_graph_on_dataset_read" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ckanext.relationship.show_relationship_graph_on_read
+        ckanext.relationship.show_relationship_graph_on_dataset_read
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ckanextrelationshipshow_relationship_graph_on_group_about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ckanext.relationship.show_relationship_graph_on_group_about
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ckanextrelationshipshow_relationship_graph_on_organization_about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ckanext.relationship.show_relationship_graph_on_organization_about
       
     </span>
   </a>
@@ -690,7 +734,7 @@
 
 <h1 id="configuration">Configuration</h1>
 <p>All configuration options are prefixed with <code>ckanext.relationship.</code>.</p>
-<h2 id="ckanextrelationshipshow_relationship_graph_on_read"><code>ckanext.relationship.show_relationship_graph_on_read</code></h2>
+<h2 id="ckanextrelationshipshow_relationship_graph_on_dataset_read"><code>ckanext.relationship.show_relationship_graph_on_dataset_read</code></h2>
 <p>Controls whether the optional relationship graph section is automatically added
 to dataset read pages when the <code>relationship_graph</code> plugin is enabled.</p>
 <table>
@@ -717,7 +761,69 @@ to dataset read pages when the <code>relationship_graph</code> plugin is enabled
 <li>manual use of <code>relationship_graph/snippets/graph.html</code> is still available</li>
 </ul>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><span class="na">ckanext.relationship.show_relationship_graph_on_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+<div class="highlight"><pre><span></span><code><span class="na">ckanext.relationship.show_relationship_graph_on_dataset_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+</code></pre></div>
+<hr />
+<h2 id="ckanextrelationshipshow_relationship_graph_on_group_about"><code>ckanext.relationship.show_relationship_graph_on_group_about</code></h2>
+<p>Controls whether the optional relationship graph section is automatically added
+to group About pages when the <code>relationship_graph</code> plugin is enabled.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><strong>Default</strong></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Default effect:</p>
+<ul>
+<li>group About pages render the graph section automatically when the current
+  group has at least one relationship</li>
+<li>manual use of <code>relationship_graph/snippets/graph.html</code> is still available</li>
+</ul>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="na">ckanext.relationship.show_relationship_graph_on_group_about</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+</code></pre></div>
+<hr />
+<h2 id="ckanextrelationshipshow_relationship_graph_on_organization_about"><code>ckanext.relationship.show_relationship_graph_on_organization_about</code></h2>
+<p>Controls whether the optional relationship graph section is automatically added
+to organization About pages when the <code>relationship_graph</code> plugin is enabled.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><strong>Default</strong></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Default effect:</p>
+<ul>
+<li>organization About pages render the graph section automatically when the
+  current organization has at least one relationship</li>
+<li>manual use of <code>relationship_graph/snippets/graph.html</code> is still available</li>
+</ul>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="na">ckanext.relationship.show_relationship_graph_on_organization_about</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
 </code></pre></div>
 <hr />
 <h2 id="ckanextrelationshipviews_without_relationships_in_package_show"><code>ckanext.relationship.views_without_relationships_in_package_show</code></h2>
@@ -856,8 +962,13 @@ the same <code>name</code> but receives a different local <code>id</code>.</p>
 <ul>
 <li>Keep the default <code>views_without_relationships_in_package_show</code> unless you
   explicitly need relationship values on search or read pages.</li>
-<li>Keep <code>show_relationship_graph_on_read = true</code> unless you want to place the
-  graph manually in custom templates or disable it on read pages entirely.</li>
+<li>Keep <code>show_relationship_graph_on_dataset_read = true</code> unless you want to
+  place the graph manually in custom templates or disable it on dataset pages
+  entirely.</li>
+<li>Keep <code>show_relationship_graph_on_group_about = true</code> unless you want to
+  disable automatic graph placement on group About pages.</li>
+<li>Keep <code>show_relationship_graph_on_organization_about = true</code> unless you want
+  to disable automatic graph placement on organization About pages.</li>
 <li>Turn on async index rebuilds on larger sites where synchronous reindexing
   slows down create or update requests.</li>
 <li>Use a dedicated queue name when you want to isolate relationship reindex jobs

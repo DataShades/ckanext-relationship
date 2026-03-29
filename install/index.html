@@ -786,6 +786,15 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <code>relationship_graph</code> before <code>scheming_datasets</code> so its template override wins:</p>
 <div class="highlight"><pre><span></span><code><span class="na">ckan.plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">... relationship relationship_graph scheming_datasets ...</span>
 </code></pre></div>
+<p>With <code>relationship_graph</code> enabled:</p>
+<ul>
+<li>dataset read pages show the graph automatically by default</li>
+<li>group About pages show it automatically by default when the current group has
+  at least one relationship</li>
+<li>organization About pages show it automatically by default when the current
+  organization has at least one relationship</li>
+</ul>
+<p>See <a href="../config/">Configuration</a> and <a href="../graph/">Graph</a> for the exact behavior.</p>
 <p>For the optional dashboard, also enable <code>tables</code> and
 <code>relationship_dashboard</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="na">ckan.plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">... relationship scheming_datasets tables relationship_dashboard ...</span>

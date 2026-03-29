@@ -734,12 +734,20 @@ relationships for datasets, groups, and organizations.</p>
 <p>If you want the graph snippet to appear on scheming dataset pages, keep
 <code>relationship_graph</code> before <code>scheming_datasets</code> so its template override wins.</p>
 <h2 id="where-it-appears">Where it appears</h2>
+<p>The graph can always be embedded manually with the reusable snippet.</p>
 <p>When the plugin is enabled and the dataset type has relationship-backed fields,
-the graph is rendered as a separate section on the dataset page.</p>
+the graph can also be rendered automatically as a separate section on the
+dataset page.</p>
 <p>It is not rendered inside the <code>additional_info</code> metadata table.</p>
 <p>Automatic insertion on dataset read pages is controlled by
-<code>ckanext.relationship.show_relationship_graph_on_read</code>, which defaults to
+<code>ckanext.relationship.show_relationship_graph_on_dataset_read</code>, which defaults to
 <code>true</code>.</p>
+<p>Automatic insertion on group About pages is controlled by
+<code>ckanext.relationship.show_relationship_graph_on_group_about</code>, which defaults to
+<code>true</code>. Automatic insertion on organization About pages is controlled by
+<code>ckanext.relationship.show_relationship_graph_on_organization_about</code>, which
+also defaults to <code>true</code>. The section is shown only if the current group or
+organization has at least one relationship.</p>
 <p><img alt="Relationship graph snippet" src="../image/relationships_graph.png" /></p>
 <h2 id="graph-snippet">Graph snippet</h2>
 <p>The reusable snippet is:</p>
@@ -771,12 +779,15 @@ the graph is rendered as a separate section on the dataset page.</p>
 </ul>
 <h2 id="visualization-behavior">Visualization behavior</h2>
 <ul>
+<li>datasets, organizations, and groups use different node colors</li>
+<li>node types are shown in the legend with circular color markers</li>
 <li><code>related_to</code> is rendered as a single undirected edge between two nodes</li>
 <li><code>child_of</code> and <code>parent_of</code> are rendered as directed edges</li>
-<li>relation types are distinguished by color and shown in the legend</li>
+<li>relation types are distinguished by color and shown in the legend with line
+  markers</li>
 <li>relation labels are shown on hover, not as permanent edge text</li>
 <li>node labels can be toggled on and off</li>
-<li>the current dataset is visually highlighted</li>
+<li>the current object is visually highlighted</li>
 </ul>
 <h2 id="controls">Controls</h2>
 <p>When controls are enabled, the snippet provides:</p>

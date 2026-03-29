@@ -640,7 +640,7 @@ can optionally expose an interactive graph UI and a sysadmin dashboard.</p>
 <li>Default form and display snippets for package, organization, and group links.</li>
 <li>A package autocomplete widget for large package target lists.</li>
 <li>An optional <code>relationship_graph</code> plugin for interactive relationship
-  visualization.</li>
+  visualization across datasets, organizations, and groups.</li>
 <li>An optional <code>relationship_dashboard</code> plugin built on <code>ckanext-tables</code> for
   sysadmins.</li>
 </ul>
@@ -674,6 +674,18 @@ can optionally expose an interactive graph UI and a sysadmin dashboard.</p>
 <td>no</td>
 </tr>
 <tr>
+<td>Graph action and graph snippet</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>Automatic graph section</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
 <td>Admin dashboard</td>
 <td>yes</td>
 <td>yes</td>
@@ -681,6 +693,12 @@ can optionally expose an interactive graph UI and a sysadmin dashboard.</p>
 </tr>
 </tbody>
 </table>
+<p>Automatic graph placement is controlled separately for each object page type:</p>
+<ul>
+<li>datasets: <code>ckanext.relationship.show_relationship_graph_on_dataset_read</code></li>
+<li>organizations: <code>ckanext.relationship.show_relationship_graph_on_organization_about</code></li>
+<li>groups: <code>ckanext.relationship.show_relationship_graph_on_group_about</code></li>
+</ul>
 
 
 
