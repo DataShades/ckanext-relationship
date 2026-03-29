@@ -49,7 +49,9 @@ For UUID-backed relationships, those links resolve to the expected CKAN entity
 pages. Legacy name-backed relationships can be ambiguous if different entity
 types share the same name.
 
-Each logical relationship appears once in the table.
+Each logical relationship appears once in the table. This deduplication also
+applies to custom symmetric and asymmetric relation types registered through
+`ckanext.relationship.interfaces.IRelationship`.
 
 ![Relationships dashboard](image/relationships_dashboard.png)
 

@@ -68,6 +68,76 @@ class TestRelationshipDashboard:
         assert payload["data"][0]["relation_type"] == "parent_of"
         assert "test-suite" in payload["data"][0]["extras"]
 
+    def test_dashboard_ajax_deduplicates_plugin_asymmetric_rows(
+        self, app, sysadmin_headers
+    ):
+        dependency = factories.Dataset(
+            type="package-with-relationship", title="Dependency"
+        )
+        dependent = factories.Dataset(
+            type="package-with-relationship", title="Dependent"
+        )
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=dependent["id"],
+            object_id=dependency["id"],
+            relation_type="depends_on",
+        )
+
+        response = app.get(
+            url_for("relationship_dashboard.dashboard"),
+            headers={
+                **sysadmin_headers,
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            status=200,
+        )
+        payload = json.loads(response.body)
+
+        assert payload["total"] == 1
+        assert f"/dataset/{dependency['id']}" in payload["data"][0]["subject_label"]
+        assert ">Dependency</a>" in payload["data"][0]["subject_label"]
+        assert f"/dataset/{dependent['id']}" in payload["data"][0]["object_label"]
+        assert ">Dependent</a>" in payload["data"][0]["object_label"]
+        assert payload["data"][0]["relation_type"] == "required_by"
+
+    def test_dashboard_ajax_deduplicates_plugin_symmetric_rows(
+        self, app, sysadmin_headers
+    ):
+        alpha = factories.Dataset(type="package-with-relationship", title="Alpha")
+        beta = factories.Dataset(type="package-with-relationship", title="Beta")
+        subject, object_ = sorted(
+            [(alpha["id"], "Alpha"), (beta["id"], "Beta")],
+            key=lambda item: item[0],
+        )
+
+        call_action(
+            "relationship_relation_create",
+            {"ignore_auth": True},
+            subject_id=alpha["id"],
+            object_id=beta["id"],
+            relation_type="references",
+        )
+
+        response = app.get(
+            url_for("relationship_dashboard.dashboard"),
+            headers={
+                **sysadmin_headers,
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            status=200,
+        )
+        payload = json.loads(response.body)
+
+        assert payload["total"] == 1
+        assert f"/dataset/{subject[0]}" in payload["data"][0]["subject_label"]
+        assert f">{subject[1]}</a>" in payload["data"][0]["subject_label"]
+        assert f"/dataset/{object_[0]}" in payload["data"][0]["object_label"]
+        assert f">{object_[1]}</a>" in payload["data"][0]["object_label"]
+        assert payload["data"][0]["relation_type"] == "references"
+
     def test_dashboard_query_uses_joins_for_entity_metadata(self):
         stmt = RelationshipDashboardTable().data_source.stmt
         sql = str(stmt.compile(compile_kwargs={"literal_binds": True})).upper()
@@ -75,4 +145,6 @@ class TestRelationshipDashboard:
         assert sql.count("LEFT OUTER JOIN") >= 4
         assert "SUBJECT_PACKAGE" in sql
         assert "OBJECT_PACKAGE" in sql
+        assert "REQUIRED_BY" in sql
+        assert "REFERENCES" in sql
         assert "LIMIT 1" not in sql

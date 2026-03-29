@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import NamedTuple
+
 import sqlalchemy as sa
 from sqlalchemy import select
 
@@ -19,11 +21,43 @@ from ckanext.tables.shared import (
     formatters,
 )
 
+from ckanext.relationship import relation_types
 from ckanext.relationship.model.relationship import Relationship
 from ckanext.relationship_dashboard.formatters import EntityLinkFormatter
 
 
-def _canonical_subject_id() -> sa.Label[str]:
+class CanonicalRelationRule(NamedTuple):
+    canonical_relation_type: str
+    swap_identifiers: bool
+    symmetric: bool
+
+
+def _canonical_relation_rules() -> dict[str, CanonicalRelationRule]:
+    rules: dict[str, CanonicalRelationRule] = {}
+
+    for relation_type, reverse_relation_type in (
+        relation_types.get_relation_type_reverse_map().items()
+    ):
+        symmetric = relation_type == reverse_relation_type
+        canonical_relation_type = (
+            relation_type
+            if symmetric
+            else max(relation_type, reverse_relation_type)
+        )
+        rules[relation_type] = CanonicalRelationRule(
+            canonical_relation_type=canonical_relation_type,
+            swap_identifiers=(
+                not symmetric and relation_type != canonical_relation_type
+            ),
+            symmetric=symmetric,
+        )
+
+    return rules
+
+
+def _canonical_subject_id(
+    rules: dict[str, CanonicalRelationRule],
+) -> sa.Label[str]:
     ordered_subject = sa.case(
         (
             Relationship.subject_id <= Relationship.object_id,
@@ -32,14 +66,21 @@ def _canonical_subject_id() -> sa.Label[str]:
         else_=Relationship.object_id,
     )
 
-    return sa.case(
-        (Relationship.relation_type == "child_of", Relationship.object_id),
-        (Relationship.relation_type == "related_to", ordered_subject),
-        else_=Relationship.subject_id,
-    ).label("subject_id")
+    whens = []
+    for relation_type, rule in rules.items():
+        if rule.symmetric:
+            whens.append((Relationship.relation_type == relation_type, ordered_subject))
+        elif rule.swap_identifiers:
+            whens.append(
+                (Relationship.relation_type == relation_type, Relationship.object_id)
+            )
+
+    return sa.case(*whens, else_=Relationship.subject_id).label("subject_id")
 
 
-def _canonical_object_id() -> sa.Label[str]:
+def _canonical_object_id(
+    rules: dict[str, CanonicalRelationRule],
+) -> sa.Label[str]:
     ordered_object = sa.case(
         (
             Relationship.subject_id <= Relationship.object_id,
@@ -48,24 +89,41 @@ def _canonical_object_id() -> sa.Label[str]:
         else_=Relationship.subject_id,
     )
 
-    return sa.case(
-        (Relationship.relation_type == "child_of", Relationship.subject_id),
-        (Relationship.relation_type == "related_to", ordered_object),
-        else_=Relationship.object_id,
-    ).label("object_id")
+    whens = []
+    for relation_type, rule in rules.items():
+        if rule.symmetric:
+            whens.append((Relationship.relation_type == relation_type, ordered_object))
+        elif rule.swap_identifiers:
+            whens.append(
+                (Relationship.relation_type == relation_type, Relationship.subject_id)
+            )
+
+    return sa.case(*whens, else_=Relationship.object_id).label("object_id")
 
 
-def _canonical_relation_type() -> sa.Label[str]:
-    return sa.case(
-        (Relationship.relation_type == "child_of", sa.literal("parent_of")),
-        else_=Relationship.relation_type,
-    ).label("relation_type")
+def _canonical_relation_type(
+    rules: dict[str, CanonicalRelationRule],
+) -> sa.Label[str]:
+    whens = []
+    for relation_type, rule in rules.items():
+        if rule.canonical_relation_type == relation_type:
+            continue
+
+        whens.append(
+            (
+                Relationship.relation_type == relation_type,
+                sa.literal(rule.canonical_relation_type),
+            )
+        )
+
+    return sa.case(*whens, else_=Relationship.relation_type).label("relation_type")
 
 
 def _canonical_relationships() -> sa.Subquery:
-    subject_id = _canonical_subject_id()
-    object_id = _canonical_object_id()
-    relation_type = _canonical_relation_type()
+    rules = _canonical_relation_rules()
+    subject_id = _canonical_subject_id(rules)
+    object_id = _canonical_object_id(rules)
+    relation_type = _canonical_relation_type(rules)
 
     return (
         select(
