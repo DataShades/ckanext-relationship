@@ -625,7 +625,7 @@
 <h1 id="overview">Overview</h1>
 <p><code>ckanext-relationship</code> adds relationship-backed fields to CKAN datasets and a
 small API for managing those links. It integrates with <code>ckanext-scheming</code> and
-can optionally expose a sysadmin dashboard.</p>
+can optionally expose an interactive graph UI and a sysadmin dashboard.</p>
 <h2 id="relationship-types">Relationship types</h2>
 <p>The extension supports three relationship types:</p>
 <ul>
@@ -639,7 +639,10 @@ can optionally expose a sysadmin dashboard.</p>
 <li>CKAN actions for creating, deleting, and listing relationships.</li>
 <li>Default form and display snippets for package, organization, and group links.</li>
 <li>A package autocomplete widget for large package target lists.</li>
-<li>An optional <code>ckanext-tables</code> dashboard for sysadmins.</li>
+<li>An optional <code>relationship_graph</code> plugin for interactive relationship
+  visualization.</li>
+<li>An optional <code>relationship_dashboard</code> plugin built on <code>ckanext-tables</code> for
+  sysadmins.</li>
 </ul>
 <h2 id="entity-support">Entity support</h2>
 <table>

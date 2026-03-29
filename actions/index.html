@@ -977,12 +977,12 @@ the extension, and its <code>package_show</code> integration.</p>
 <tr>
 <td><code>subject_id</code></td>
 <td>yes</td>
-<td>Use the CKAN ID. Entity names are also accepted in the current implementation</td>
+<td>Use the CKAN ID. For direct action calls, <code>name + name</code> is allowed only when <code>ckanext.relationship.allow_name_based_relation_create = true</code></td>
 </tr>
 <tr>
 <td><code>object_id</code></td>
 <td>yes</td>
-<td>Use the CKAN ID. Entity names are also accepted in the current implementation</td>
+<td>Use the CKAN ID. For direct action calls, <code>name + name</code> is allowed only when <code>ckanext.relationship.allow_name_based_relation_create = true</code></td>
 </tr>
 <tr>
 <td><code>relation_type</code></td>
@@ -1000,6 +1000,9 @@ the extension, and its <code>package_show</code> integration.</p>
 <ul>
 <li>Duplicate relationships are ignored.</li>
 <li>The reverse relationship is created automatically.</li>
+<li>Mixed identifier pairs such as <code>id + name</code> are rejected.</li>
+<li>This direct action stores the accepted identifiers as provided; it does not try
+  to resolve <code>name + name</code> into <code>id + id</code>.</li>
 </ul>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="n">tk</span><span class="o">.</span><span class="n">get_action</span><span class="p">(</span><span class="s2">&quot;relationship_relation_create&quot;</span><span class="p">)(</span>
@@ -1084,14 +1087,24 @@ the extension, and its <code>package_show</code> integration.</p>
 of <code>object_id</code> values.</p>
 <h3 id="identifier-behavior">Identifier behavior</h3>
 <p>For predictable results, use CKAN IDs in all relationship actions.</p>
-<p>The current implementation also supports some name-based behavior for backward
+<p>The implementation also supports some name-based behavior for backward
 compatibility:</p>
 <ul>
-<li><code>relationship_relation_create</code> accepts entity names as well as IDs</li>
+<li><code>relationship_relation_create</code> accepts <code>name + name</code> only when
+  <code>ckanext.relationship.allow_name_based_relation_create = true</code></li>
+<li>direct <code>relationship_relation_create</code> does not normalize accepted names to IDs</li>
 <li><code>relationship_relation_delete</code> can remove rows addressed by ID or by name</li>
 <li><code>relationship_relations_list</code> and <code>relationship_relations_ids_list</code> are
   asymmetric: an ID lookup can find rows created by name, but a name lookup
   does not reliably find rows created by ID</li>
+<li>scheming-backed dataset create and update flows resolve related names to
+  local IDs when possible</li>
+<li>if scheming-backed create or update cannot resolve both sides and
+  <code>ckanext.relationship.allow_name_based_relation_create = true</code>, it can store a
+  temporary <code>name + name</code> row</li>
+<li>the same scheming flow can later rewrite that temporary or legacy
+  <code>name + name</code>, <code>id + name</code>, or <code>name + id</code> row to canonical <code>id + id</code> once
+  both local entities exist</li>
 </ul>
 <h3 id="relationship_get_entity_list"><code>relationship_get_entity_list</code></h3>
 <p>Returns entities of a given kind and type.</p>

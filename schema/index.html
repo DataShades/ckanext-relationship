@@ -469,6 +469,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#identifier-behavior-in-scheming-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifier behavior in scheming fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#display-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -831,6 +842,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#identifier-behavior-in-scheming-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifier behavior in scheming fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#display-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1136,6 +1158,20 @@ apply because <code>related_entity</code> is a normal scheming field preset.</p>
 <li>The current entity is not offered as a target.</li>
 <li>If <code>multiple</code> is false and the field is not required, the widget includes a
   <code>No relation</code> option.</li>
+</ul>
+<h2 id="identifier-behavior-in-scheming-fields">Identifier behavior in scheming fields</h2>
+<p>The shipped relationship widgets submit entity IDs.</p>
+<p>If a custom importer or syndication flow injects entity names into a
+scheming-backed relationship field instead:</p>
+<ul>
+<li>the validator first tries to resolve those names to local CKAN IDs</li>
+<li>if both sides can be resolved, the stored relationship is canonical <code>id + id</code></li>
+<li>if a target still does not exist locally and
+  <code>ckanext.relationship.allow_name_based_relation_create = true</code>, the create or
+  update falls back to a temporary <code>name + name</code> row</li>
+<li>once both local entities exist, later scheming-backed create or update calls
+  rewrite that temporary or legacy <code>name + name</code>, <code>id + name</code>, or <code>name + id</code>
+  row to canonical <code>id + id</code></li>
 </ul>
 <h2 id="display-behavior">Display behavior</h2>
 <p>The default display snippet renders related entities as links to their CKAN
