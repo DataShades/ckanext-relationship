@@ -6,6 +6,8 @@ import ckan.tests.factories as factories
 from ckan.lib.helpers import url_for
 from ckan.tests.helpers import call_action
 
+from ckanext.relationship_dashboard.table import RelationshipDashboardTable
+
 
 @pytest.mark.ckan_config(
     "ckan.plugins",
@@ -65,3 +67,12 @@ class TestRelationshipDashboard:
         assert payload["data"][0]["object_kind"] == "package"
         assert payload["data"][0]["relation_type"] == "parent_of"
         assert "test-suite" in payload["data"][0]["extras"]
+
+    def test_dashboard_query_uses_joins_for_entity_metadata(self):
+        stmt = RelationshipDashboardTable().data_source.stmt
+        sql = str(stmt.compile(compile_kwargs={"literal_binds": True})).upper()
+
+        assert sql.count("LEFT OUTER JOIN") >= 4
+        assert "SUBJECT_PACKAGE" in sql
+        assert "OBJECT_PACKAGE" in sql
+        assert "LIMIT 1" not in sql

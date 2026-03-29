@@ -62,107 +62,132 @@ def _canonical_relation_type() -> sa.Label[str]:
     ).label("relation_type")
 
 
-def _entity_label(entity_ref: sa.Label[str]) -> sa.Label[str]:
-    package_label = (
-        select(sa.func.coalesce(model.Package.title, model.Package.name))
-        .where(
-            model.Package.state != "deleted",
-            sa.or_(
-                model.Package.id == entity_ref,
-                model.Package.name == entity_ref,
-            ),
-        )
-        .limit(1)
-        .scalar_subquery()
-    )
-    group_label = (
-        select(sa.func.coalesce(model.Group.title, model.Group.name))
-        .where(
-            model.Group.state != "deleted",
-            sa.or_(
-                model.Group.id == entity_ref,
-                model.Group.name == entity_ref,
-            ),
-        )
-        .limit(1)
-        .scalar_subquery()
-    )
+def _canonical_relationships() -> sa.Subquery:
+    subject_id = _canonical_subject_id()
+    object_id = _canonical_object_id()
+    relation_type = _canonical_relation_type()
 
-    return sa.func.coalesce(package_label, group_label, entity_ref).label(
-        entity_ref.name.replace("_id", "_label")
-    )
-
-
-def _entity_kind(entity_ref: sa.Label[str]) -> sa.Label[str]:
-    package_kind = (
-        select(sa.literal("package"))
-        .where(
-            model.Package.state != "deleted",
-            sa.or_(
-                model.Package.id == entity_ref,
-                model.Package.name == entity_ref,
-            ),
-        )
-        .limit(1)
-        .scalar_subquery()
-    )
-    group_kind = (
+    return (
         select(
+            sa.func.min(Relationship.id).label("id"),
+            subject_id,
+            object_id,
+            relation_type,
+            sa.func.min(Relationship.created_at).label("created_at"),
+            sa.func.nullif(
+                sa.func.max(sa.cast(Relationship.extras, sa.Text)),
+                "{}",
+            ).label("extras"),
+        )
+        .group_by(subject_id, object_id, relation_type)
+        .subquery("canonical_relationships")
+    )
+
+
+def _package_entities() -> sa.Subquery:
+    return (
+        select(
+            model.Package.id.label("entity_id"),
+            model.Package.name.label("entity_name"),
+            sa.func.coalesce(model.Package.title, model.Package.name).label(
+                "entity_label"
+            ),
+            sa.literal("package").label("entity_kind"),
+        )
+        .where(model.Package.state != "deleted")
+        .subquery("package_entities")
+    )
+
+
+def _group_entities() -> sa.Subquery:
+    return (
+        select(
+            model.Group.id.label("entity_id"),
+            model.Group.name.label("entity_name"),
+            sa.func.coalesce(model.Group.title, model.Group.name).label("entity_label"),
             sa.case(
                 (model.Group.is_organization.is_(True), sa.literal("organization")),
                 else_=sa.literal("group"),
-            )
+            ).label("entity_kind"),
         )
-        .where(
-            model.Group.state != "deleted",
-            sa.or_(
-                model.Group.id == entity_ref,
-                model.Group.name == entity_ref,
-            ),
-        )
-        .limit(1)
-        .scalar_subquery()
+        .where(model.Group.state != "deleted")
+        .subquery("group_entities")
     )
 
-    return sa.func.coalesce(package_kind, group_kind, sa.literal("unknown")).label(
-        entity_ref.name.replace("_id", "_kind")
+
+def _entity_match(entity_alias: sa.Subquery, entity_ref: sa.ColumnElement[str]):
+    return sa.or_(
+        entity_alias.c.entity_id == entity_ref,
+        entity_alias.c.entity_name == entity_ref,
     )
 
 
 class RelationshipDashboardTable(TableDefinition):
     def __init__(self):
-        subject_id = _canonical_subject_id()
-        object_id = _canonical_object_id()
-        relation_type = _canonical_relation_type()
-        subject_label = _entity_label(subject_id)
-        object_label = _entity_label(object_id)
-        subject_kind = _entity_kind(subject_id)
-        object_kind = _entity_kind(object_id)
-        created_at = sa.func.min(Relationship.created_at).label("created_at")
-        extras = sa.func.nullif(
-            sa.func.max(sa.cast(Relationship.extras, sa.Text)),
-            "{}",
-        ).label("extras")
+        canonical_relationships = _canonical_relationships()
+        package_entities = _package_entities()
+        group_entities = _group_entities()
+        subject_package = package_entities.alias("subject_package")
+        subject_group = group_entities.alias("subject_group")
+        object_package = package_entities.alias("object_package")
+        object_group = group_entities.alias("object_group")
+
+        subject_label = sa.func.coalesce(
+            subject_package.c.entity_label,
+            subject_group.c.entity_label,
+            canonical_relationships.c.subject_id,
+        ).label("subject_label")
+        object_label = sa.func.coalesce(
+            object_package.c.entity_label,
+            object_group.c.entity_label,
+            canonical_relationships.c.object_id,
+        ).label("object_label")
+        subject_kind = sa.func.coalesce(
+            subject_package.c.entity_kind,
+            subject_group.c.entity_kind,
+            sa.literal("unknown"),
+        ).label("subject_kind")
+        object_kind = sa.func.coalesce(
+            object_package.c.entity_kind,
+            object_group.c.entity_kind,
+            sa.literal("unknown"),
+        ).label("object_kind")
 
         super().__init__(
             name="relationship",
             data_source=DatabaseDataSource(
                 stmt=select(
-                    sa.func.min(Relationship.id).label("id"),
-                    subject_id,
+                    canonical_relationships.c.id,
+                    canonical_relationships.c.subject_id,
                     subject_label,
                     subject_kind,
-                    object_id,
+                    canonical_relationships.c.object_id,
                     object_label,
                     object_kind,
-                    relation_type,
-                    created_at,
-                    extras,
+                    canonical_relationships.c.relation_type,
+                    canonical_relationships.c.created_at,
+                    canonical_relationships.c.extras,
                 )
-                .group_by(subject_id, subject_label, subject_kind)
-                .group_by(object_id, object_label, object_kind)
-                .group_by(relation_type)
-                .order_by(created_at.desc()),
+                .select_from(canonical_relationships)
+                .outerjoin(
+                    subject_package,
+                    _entity_match(
+                        subject_package, canonical_relationships.c.subject_id
+                    ),
+                )
+                .outerjoin(
+                    subject_group,
+                    _entity_match(subject_group, canonical_relationships.c.subject_id),
+                )
+                .outerjoin(
+                    object_package,
+                    _entity_match(object_package, canonical_relationships.c.object_id),
+                )
+                .outerjoin(
+                    object_group,
+                    _entity_match(object_group, canonical_relationships.c.object_id),
+                )
+                .order_by(canonical_relationships.c.created_at.desc()),
             ),
             columns=[
                 ColumnDefinition(

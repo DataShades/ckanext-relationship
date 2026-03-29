@@ -5,6 +5,8 @@ from ckan import logic, model
 from ckan.tests import factories
 from ckan.tests.helpers import call_action
 
+from ckanext.relationship_graph.logic import action as graph_action
+
 
 def _graph(object_id: str, **kwargs):
     return call_action("relationship_graph", object_id=object_id, **kwargs)
@@ -139,6 +141,68 @@ class TestRelationshipGraphAction:
                 "is_center": True,
             }
         ]
+
+    def test_graph_caches_repeated_entity_record_lookups(self, monkeypatch):
+        alpha = factories.Dataset(type="package-with-relationship")
+        beta = factories.Dataset(type="package-with-relationship")
+        gamma = factories.Dataset(type="package-with-relationship")
+
+        _relate(alpha["id"], beta["id"], "related_to")
+        _relate(beta["id"], gamma["id"], "related_to")
+        _relate(gamma["id"], alpha["id"], "related_to")
+
+        lookup_calls: list[tuple[str, str]] = []
+        original = graph_action._load_entity_record
+
+        def counting_loader(session, entity, identifier):
+            lookup_calls.append((entity, identifier))
+            return original(session, entity, identifier)
+
+        monkeypatch.setattr(graph_action, "_load_entity_record", counting_loader)
+
+        _graph(alpha["id"], depth=3, relation_types=["related_to"])
+
+        assert lookup_calls.count(("package", alpha["id"])) == 1
+        assert lookup_calls.count(("package", beta["id"])) == 1
+        assert lookup_calls.count(("package", gamma["id"])) == 1
+
+    def test_graph_batches_relationship_queries_per_frontier_level(self, monkeypatch):
+        alpha = factories.Dataset(type="package-with-relationship")
+        beta = factories.Dataset(type="package-with-relationship")
+        gamma = factories.Dataset(type="package-with-relationship")
+        delta = factories.Dataset(type="package-with-relationship")
+        epsilon = factories.Dataset(type="package-with-relationship")
+
+        _relate(alpha["id"], beta["id"], "related_to")
+        _relate(alpha["id"], gamma["id"], "related_to")
+        _relate(beta["id"], delta["id"], "related_to")
+        _relate(gamma["id"], epsilon["id"], "related_to")
+
+        relationship_queries: list[frozenset[str]] = []
+        original = graph_action._get_graph_relationships
+
+        def counting_relationships(
+            session, lookup_ids, relation_types, include_reverse
+        ):
+            relationship_queries.append(frozenset(lookup_ids))
+            return original(session, lookup_ids, relation_types, include_reverse)
+
+        monkeypatch.setattr(
+            graph_action,
+            "_get_graph_relationships",
+            counting_relationships,
+        )
+
+        _graph(alpha["id"], depth=2, relation_types=["related_to"])
+
+        assert len(relationship_queries) == 2
+        assert {alpha["id"], alpha["name"]}.issubset(relationship_queries[0])
+        assert {
+            beta["id"],
+            beta["name"],
+            gamma["id"],
+            gamma["name"],
+        }.issubset(relationship_queries[1])
 
     def test_nonexistent_center_raises_not_found(self):
         with pytest.raises(logic.NotFound):

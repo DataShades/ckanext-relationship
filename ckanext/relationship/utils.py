@@ -62,13 +62,17 @@ def entity_name_by_id(entity_id: str) -> str | None:
     actions = ["package_show", "organization_show", "group_show"]
 
     for action in actions:
-        try:
-            entity = tk.get_action(action)({"ignore_auth": True}, {"id": entity_id})
-            if entity:
-                return entity.get("name")
-        except NotFound:
-            pass
+        entity = _entity_by_action(action, entity_id)
+        if entity:
+            return entity.get("name")
     return None
+
+
+def _entity_by_action(action: str, entity_id: str) -> dict[str, Any] | None:
+    try:
+        return tk.get_action(action)({"ignore_auth": True}, {"id": entity_id})
+    except NotFound:
+        return None
 
 
 def _is_uuid(v: str) -> bool:

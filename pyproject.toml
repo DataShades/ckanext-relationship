@@ -69,7 +69,7 @@ select = [
        # "D2",  # doc formatting
        "D4",  # doc convention
        "PL",  # pylint
-       # "PERF", # performance anti-patterns
+       "PERF", # performance anti-patterns
        "PT",  # pytest style
        "PIE",  # misc lints
        "RET",  # improvements for return statements
